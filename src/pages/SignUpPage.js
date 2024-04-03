@@ -4,6 +4,7 @@ import { Label } from "../components/label";
 import { Input } from "components/input";
 import { useForm } from "react-hook-form";
 import { IconEyeClose } from "components/icon";
+import { Field } from "components/field";
 
 const SignUpPageStyle = styled.div`
   /* background-color: ${(props) => props.theme.primary}; */
@@ -18,13 +19,6 @@ const SignUpPageStyle = styled.div`
     color: ${(props) => props.theme.primary};
     font-size: 40px;
     font-style: bold;
-  }
-
-  .field {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    row-gap: 20px;
   }
 
   .form {
@@ -48,17 +42,40 @@ const SignUpPage = () => {
       <div className="container">
         <img srcSet="./logo.png 2x" alt="monkey-blogging" className="logo" />
         <h1 className="heading">Monkey Blogging</h1>
-        <form className="form" onSubmit={handleSubmit(handleSignUp)}>
-          <div className="field">
+        <form
+          className="form"
+          onSubmit={handleSubmit(handleSignUp)}
+          autoComplete="off"
+        >
+          <Field>
             <Label htmlFor="fullname">Fullname</Label>
             <Input
-              id="fullname"
               type="text"
               name="fullname"
               placeholder="Enter your fullname"
               control={control}
             />
-          </div>
+          </Field>
+          <Field>
+            <Label htmlFor="email">Email address</Label>
+            <Input
+              type="email"
+              name="email"
+              placeholder="Enter your email"
+              control={control}
+            />
+          </Field>
+          <Field>
+            <Label htmlFor="password">Password</Label>
+            <Input
+              type="password"
+              name="password"
+              placeholder="Enter your password"
+              control={control}
+            >
+              <IconEyeClose className="input-icon"></IconEyeClose>
+            </Input>
+          </Field>
         </form>
       </div>
     </SignUpPageStyle>

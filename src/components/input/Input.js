@@ -29,6 +29,7 @@ const InputStyles = styled.div`
     color: #b2b3bd;
   }
   .input-icon {
+    width: 20px;
     position: absolute;
     right: 20px;
     top: 50%;
