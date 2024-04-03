@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { Label } from "../components/label";
 import { Input } from "components/input";
 import { useForm } from "react-hook-form";
+import { IconEyeClose } from "components/icon";
 
 const SignUpPageStyle = styled.div`
   /* background-color: ${(props) => props.theme.primary}; */
@@ -25,29 +26,6 @@ const SignUpPageStyle = styled.div`
     align-items: flex-start;
     row-gap: 20px;
   }
-
-  /* .input {
-    width: 100%;
-    padding: 20px;
-    background-color: ${(props) => props.theme.grayLight};
-    border-radius: 8px;
-    font-weight: 500;
-    transition: all 0.2s linear;
-    border: 1px solid transparent;
-  }
-
-  input:focus {
-    background-color: white;
-    border-color: ${(props) => props.theme.primary};
-  } */
-  /* 
-  .input::-webkit-input-placeholder {
-    color: "#84878b";
-  }
-
-  .input::-moz-input-placeholder {
-    color: "#84878b";
-  } */
 
   .form {
     max-width: 600px;
