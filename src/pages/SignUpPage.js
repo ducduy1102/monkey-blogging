@@ -5,6 +5,8 @@ import { Input } from "components/input";
 import { useForm } from "react-hook-form";
 import { IconEyeClose, IconEyeOpen } from "components/icon";
 import { Field } from "components/field";
+import { Button } from "components/button";
+import { LoadingSpinner } from "components/loading";
 
 const SignUpPageStyle = styled.div`
   /* background-color: ${(props) => props.theme.primary}; */
@@ -87,6 +89,9 @@ const SignUpPage = () => {
               )}
             </Input>
           </Field>
+          <Button type="submit" disabled={true} isLoading={true}>
+            Sign Up
+          </Button>
         </form>
       </div>
     </SignUpPageStyle>
