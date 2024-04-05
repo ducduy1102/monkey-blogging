@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { Label } from "../components/label";
 import { Input } from "components/input";
@@ -8,6 +8,7 @@ import { Field } from "components/field";
 import { Button } from "components/button";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
+import { toast } from "react-toastify";
 
 const SignUpPageStyle = styled.div`
   /* background-color: ${(props) => props.theme.primary}; */
@@ -56,17 +57,23 @@ const SignUpPage = () => {
   const handleSignUp = (values) => {
     console.log(errors);
     // console.log(values);
-    // console.log(isSubmitting);
-    // if (!isValid) return;
-    // return new Promise((resolve) => {
-    //   setTimeout(() => {
-    //     resolve();
-    //   }, 3000);
-    // });
+    console.log(isSubmitting);
+    if (!isValid) return;
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve();
+      }, 3000);
+    });
   };
 
   const [togglePassword, setTogglePassword] = useState(false);
-  console.log(errors);
+  console.log(Object.values(errors));
+  useEffect(() => {
+    const arrErrors = Object.values(errors);
+    if (arrErrors.length > 0) {
+      toast.error(arrErrors[0]?.message, { pauseOnHover: false, delay: 0 });
+    }
+  }, [errors]);
 
   return (
     <SignUpPageStyle>
