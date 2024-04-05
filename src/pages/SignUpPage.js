@@ -13,27 +13,7 @@ import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { auth, db } from "firebase-app/firebase-config";
 import { useNavigate } from "react-router-dom";
 import { addDoc, collection } from "firebase/firestore";
-
-const SignUpPageStyle = styled.div`
-  /* background-color: ${(props) => props.theme.primary}; */
-  min-height: 100vh;
-  padding: 40px;
-  .logo {
-    margin: 0 auto 20px;
-  }
-
-  .heading {
-    text-align: center;
-    color: ${(props) => props.theme.primary};
-    font-size: 40px;
-    font-style: bold;
-  }
-
-  .form {
-    max-width: 600px;
-    margin: 0 auto;
-  }
-`;
+import AuthenticationPage from "./AuthenticationPage";
 
 const schema = yup.object({
   fullname: yup.string().required("Please enter your fullname"),
@@ -106,66 +86,62 @@ const SignUpPage = () => {
   }, [errors]);
 
   return (
-    <SignUpPageStyle>
-      <div className="container">
-        <img srcSet="./logo.png 2x" alt="monkey-blogging" className="logo" />
-        <h1 className="heading">Monkey Blogging</h1>
-        <form
-          className="form"
-          onSubmit={handleSubmit(handleSignUp)}
-          autoComplete="off"
-        >
-          <Field>
-            <Label htmlFor="fullname">Fullname</Label>
-            <Input
-              type="text"
-              name="fullname"
-              placeholder="Enter your fullname"
-              control={control}
-            />
-          </Field>
-          <Field>
-            <Label htmlFor="email">Email address</Label>
-            <Input
-              type="email"
-              name="email"
-              placeholder="Enter your email"
-              control={control}
-            />
-          </Field>
-          <Field>
-            <Label htmlFor="password">Password</Label>
-            <Input
-              type={togglePassword ? "text" : "password"}
-              name="password"
-              placeholder="Enter your password"
-              control={control}
-            >
-              {!togglePassword ? (
-                <IconEyeClose
-                  onClick={() => setTogglePassword(true)}
-                ></IconEyeClose>
-              ) : (
-                <IconEyeOpen
-                  onClick={() => setTogglePassword(false)}
-                ></IconEyeOpen>
-              )}
-            </Input>
-          </Field>
-          <Button
-            type="submit"
-            style={{
-              maxWidth: 300,
-              margin: "0 auto",
-            }}
-            isLoading={isSubmitting}
-            disabled={isSubmitting}
+    <AuthenticationPage>
+      <form
+        className="form"
+        onSubmit={handleSubmit(handleSignUp)}
+        autoComplete="off"
+      >
+        <Field>
+          <Label htmlFor="fullname">Fullname</Label>
+          <Input
+            type="text"
+            name="fullname"
+            placeholder="Enter your fullname"
+            control={control}
+          />
+        </Field>
+        <Field>
+          <Label htmlFor="email">Email address</Label>
+          <Input
+            type="email"
+            name="email"
+            placeholder="Enter your email"
+            control={control}
+          />
+        </Field>
+        <Field>
+          <Label htmlFor="password">Password</Label>
+          <Input
+            type={togglePassword ? "text" : "password"}
+            name="password"
+            placeholder="Enter your password"
+            control={control}
           >
-            Sign Up
-          </Button>
-        </form>
-      </div>
-    </SignUpPageStyle>
+            {!togglePassword ? (
+              <IconEyeClose
+                onClick={() => setTogglePassword(true)}
+              ></IconEyeClose>
+            ) : (
+              <IconEyeOpen
+                onClick={() => setTogglePassword(false)}
+              ></IconEyeOpen>
+            )}
+          </Input>
+        </Field>
+        <Button
+          type="submit"
+          style={{
+            maxWidth: 300,
+            margin: "0 auto",
+          }}
+          isLoading={isSubmitting}
+          disabled={isSubmitting}
+        >
+          Sign Up
+        </Button>
+      </form>
+    </AuthenticationPage>
   );
 };
 
