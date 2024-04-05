@@ -6,7 +6,8 @@ import { useForm } from "react-hook-form";
 import { IconEyeClose, IconEyeOpen } from "components/icon";
 import { Field } from "components/field";
 import { Button } from "components/button";
-import { LoadingSpinner } from "components/loading";
+import * as yup from "yup";
+import { yupResolver } from "@hookform/resolvers/yup";
 
 const SignUpPageStyle = styled.div`
   /* background-color: ${(props) => props.theme.primary}; */
@@ -29,6 +30,18 @@ const SignUpPageStyle = styled.div`
   }
 `;
 
+const schema = yup.object({
+  fullname: yup.string().required("Please enter your fullname"),
+  email: yup
+    .string()
+    .email("Please enter your valid email address")
+    .required("Please enter your email address"),
+  password: yup
+    .string()
+    .min(8, "Your password must be at least 8 characters or greater")
+    .required("Please enter your password"),
+});
+
 const SignUpPage = () => {
   const {
     control,
@@ -38,19 +51,22 @@ const SignUpPage = () => {
     reset,
   } = useForm({
     mode: "onChange",
+    resolver: yupResolver(schema),
   });
   const handleSignUp = (values) => {
-    console.log(values);
-    console.log(isSubmitting);
-    if (!isValid) return;
-    return new Promise((resolve) => {
-      setTimeout(() => {
-        resolve();
-      }, 3000);
-    });
+    console.log(errors);
+    // console.log(values);
+    // console.log(isSubmitting);
+    // if (!isValid) return;
+    // return new Promise((resolve) => {
+    //   setTimeout(() => {
+    //     resolve();
+    //   }, 3000);
+    // });
   };
 
   const [togglePassword, setTogglePassword] = useState(false);
+  console.log(errors);
 
   return (
     <SignUpPageStyle>
