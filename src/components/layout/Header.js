@@ -1,24 +1,25 @@
 import { Button } from "components/button";
 import React from "react";
+import { NavLink } from "react-router-dom";
 import styled from "styled-components";
 
 // optimize
 const menuLinks = [
   {
-    url: "/#",
+    url: "/",
     title: "Home",
   },
   {
-    url: "/#",
+    url: "/blog",
     title: "Blog",
   },
   {
-    url: "/#",
+    url: "/contact",
     title: "Contact",
   },
 ];
 const HeaderStyles = styled.header`
-  padding: 40px 0;
+  padding: 20px 0;
 
   .header-main {
     display: flex;
@@ -34,8 +35,9 @@ const HeaderStyles = styled.header`
     display: flex;
     align-items: center;
     gap: 20px;
-    margin-left: 40px;
+    /* margin-left: 40px; */
     list-style: none;
+    font-weight: 500;
   }
 
   /* .header-right {
@@ -49,7 +51,7 @@ const HeaderStyles = styled.header`
     display: flex;
     align-items: center;
     padding: 15px 25px;
-    border: 1px solid #eee;
+    border: 1px solid #ccc;
     border-radius: 8px;
     width: 100%;
     max-width: 320px;
@@ -58,6 +60,7 @@ const HeaderStyles = styled.header`
   .search-input {
     flex: 1;
     padding-right: 45px;
+    font-weight: 500;
   }
 
   .search-icon {
@@ -77,15 +80,15 @@ const Header = () => {
     <HeaderStyles>
       <div className="container">
         <div className="header-main">
-          <a href="/">
-            <img srcSet="/logo.png 2x" alt="Money Blogging" className="logo" />
-          </a>
+          <NavLink to="/">
+            <img srcSet="/logo.png 2x" alt="monkey-blogging" className="logo" />
+          </NavLink>
           <ul className="menu">
             {menuLinks.map((item) => (
               <li className="menu-item" key={item.title}>
-                <a href={item.url} className="menu-link">
+                <NavLink to={item.url} className="menu-link">
                   {item.title}
-                </a>
+                </NavLink>
               </li>
             ))}
           </ul>
@@ -127,10 +130,10 @@ const Header = () => {
             </div>
           </div>
           <Button
-            style={{
-              maxWidth: "200px",
-            }}
+            type="button"
+            height="56px"
             className="header-button"
+            to="/sign-up"
           >
             Sign Up
           </Button>
