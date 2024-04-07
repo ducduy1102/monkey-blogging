@@ -21,7 +21,7 @@ const menuLinks = [
   },
 ];
 const HeaderStyles = styled.header`
-  padding: 20px 0;
+  padding: 40px 0;
 
   .header-main {
     display: flex;
@@ -88,7 +88,7 @@ function getLastName(name) {
 
 const Header = () => {
   const { userInfo } = useAuth();
-  console.log(userInfo);
+  // console.log(userInfo);
   return (
     <HeaderStyles>
       <div className="container">
