@@ -1,4 +1,6 @@
 import { Button } from "components/button";
+import { useAuth } from "contexts/auth-context";
+import { auth } from "firebase-app/firebase-config";
 import React from "react";
 import { NavLink } from "react-router-dom";
 import styled from "styled-components";
@@ -35,7 +37,7 @@ const HeaderStyles = styled.header`
     display: flex;
     align-items: center;
     gap: 20px;
-    /* margin-left: 40px; */
+    margin-left: 40px;
     list-style: none;
     font-weight: 500;
   }
@@ -55,6 +57,7 @@ const HeaderStyles = styled.header`
     border-radius: 8px;
     width: 100%;
     max-width: 320px;
+    margin-right: 20px;
   }
 
   .search-input {
@@ -73,9 +76,19 @@ const HeaderStyles = styled.header`
   .header-button {
     margin-left: 20px;
   }
+
+  /* .header-auth {} */
 `;
 
+function getLastName(name) {
+  if (!name) return "User";
+  const length = name.split(" ").length;
+  return name.split(" ")[length - 1];
+}
+
 const Header = () => {
+  const { userInfo } = useAuth();
+  console.log(userInfo);
   return (
     <HeaderStyles>
       <div className="container">
@@ -129,14 +142,23 @@ const Header = () => {
               </svg>
             </div>
           </div>
-          <Button
-            type="button"
-            height="56px"
-            className="header-button"
-            to="/sign-up"
-          >
-            Sign Up
-          </Button>
+          {!userInfo ? (
+            <Button
+              type="button"
+              height="56px"
+              className="header-button"
+              to="/sign-up"
+            >
+              Sign Up
+            </Button>
+          ) : (
+            <div className="header-auth">
+              <span>Welcome back, </span>
+              <strong className="text-primary">
+                {getLastName(userInfo?.displayName)}
+              </strong>
+            </div>
+          )}
         </div>
       </div>
     </HeaderStyles>

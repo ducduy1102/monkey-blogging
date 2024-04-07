@@ -5,6 +5,7 @@
 }
 * {
   margin: 0;
+  padding: 0;
 }
 
 html,
@@ -58,4 +59,8 @@ body {
 a {
   text-decoration: none;
   color: inherit;
+}
+
+.text-primary {
+  color: #a4d96c;
 }
