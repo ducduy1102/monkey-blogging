@@ -12,6 +12,7 @@ const InputStyles = styled.div`
     background-color: transparent;
     border: 1px solid ${(props) => props.theme.grayLight};
     border-radius: 8px;
+    font-weight: 500;
     transition: all 0.2s linear;
     color: ${(props) => props.theme.black};
     font-size: 14px;
