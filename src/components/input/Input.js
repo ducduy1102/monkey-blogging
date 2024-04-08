@@ -7,30 +7,24 @@ const InputStyles = styled.div`
   width: 100%;
   input {
     width: 100%;
-    padding: ${(props) =>
-      props.hasIcon ? "16px 60px 16px 20px" : "16px 20px"};
-    background-color: transparent;
-    border: 1px solid ${(props) => props.theme.grayLight};
+    padding: ${(props) => (props.hasIcon ? "20px 60px 20px 20px" : "20px")};
+    background-color: ${(props) => props.theme.grayLight};
     border-radius: 8px;
     font-weight: 500;
     transition: all 0.2s linear;
-    color: ${(props) => props.theme.black};
-    font-size: 14px;
+    border: 1px solid transparent;
   }
-
   input:focus {
     background-color: white;
     border-color: ${(props) => props.theme.primary};
   }
-
   input::-webkit-input-placeholder {
-    color: #b2b3bd;
+    color: #84878b;
   }
   input::-moz-input-placeholder {
-    color: #b2b3bd;
+    color: #84878b;
   }
   .input-icon {
-    width: 20px;
     position: absolute;
     right: 20px;
     top: 50%;
@@ -38,7 +32,6 @@ const InputStyles = styled.div`
     cursor: pointer;
   }
 `;
-
 const Input = ({ name = "", type = "text", children, control, ...props }) => {
   const { field } = useController({
     control,
