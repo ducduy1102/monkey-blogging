@@ -13,6 +13,7 @@ const TableStyles = styled.div`
   }
   th,
   td {
+    font-weight: 500;
     vertical-align: middle;
   }
   th {
