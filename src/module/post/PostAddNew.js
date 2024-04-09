@@ -4,14 +4,14 @@ import { Dropdown } from "components/dropdown";
 import { Field } from "components/field";
 import { Input } from "components/input";
 import { Label } from "components/label";
-import React from "react";
+import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import styled from "styled-components";
 import slugify from "slugify";
 import { postStatus } from "utils/constants";
 import ImageUpload from "components/image/ImageUpload";
-// import { addDoc, collection } from "firebase/firestore";
-// import { db } from "firebase-app/firebase-config";
+import { addDoc, collection, getDocs, query, where } from "firebase/firestore";
+import { db } from "firebase-app/firebase-config";
 import useFirebaseImage from "hooks/useFirebaseImage";
 import Toggle from "components/toggle/Toggle";
 
@@ -48,6 +48,28 @@ const PostAddNew = () => {
   const { image, progress, handleSelectImage, handleDeleteImage } =
     useFirebaseImage(setValue, getValues);
 
+  useEffect(() => {
+    async function getData() {
+      const colRef = collection(db, "categories");
+      const q = query(colRef, where("status", "==", 1));
+      // console.log(q);
+
+      const querySnapshot = await getDocs(q);
+      let result = [];
+      querySnapshot.forEach((doc) => {
+        // doc.data() is never undefined for query doc snapshots
+        // console.log(doc.id, " => ", doc.data());
+        result.push({
+          id: doc.id,
+          ...doc.data(),
+        });
+      });
+      console.log(result);
+      console.log(querySnapshot);
+    }
+    getData();
+  }, []);
+
   return (
     <PostAddNewStyles>
       <h1 className="dashboard-heading">Add new post</h1>
@@ -83,6 +105,26 @@ const PostAddNew = () => {
             ></ImageUpload>
           </Field>
           <Field>
+            <Label>Category</Label>
+            <Input control={control} placeholder="Find the author"></Input>
+          </Field>
+        </div>
+        <div className="grid grid-cols-2 mb-10 gap-x-10">
+          <Field>
+            <Label>Feature Post</Label>
+            <Toggle
+              on={watchHot === true}
+              onClick={() => setValue("hot", !watchHot)}
+            ></Toggle>
+            {/* <Dropdown>
+              <Dropdown.Option>Knowledge</Dropdown.Option>
+              <Dropdown.Option>Blockchain</Dropdown.Option>
+              <Dropdown.Option>Setup</Dropdown.Option>
+              <Dropdown.Option>Nature</Dropdown.Option>
+              <Dropdown.Option>Developer</Dropdown.Option>
+            </Dropdown> */}
+          </Field>
+          <Field>
             <Label>Status</Label>
             <div className="flex items-center gap-x-5">
               <Radio
@@ -114,27 +156,6 @@ const PostAddNew = () => {
               </Radio>
             </div>
           </Field>
-          {/* <Field>
-            <Label>Author</Label>
-            <Input control={control} placeholder="Find the author"></Input>
-          </Field> */}
-        </div>
-        <div className="grid grid-cols-2 mb-10 gap-x-10">
-          <Field>
-            <Label>Feature Post</Label>
-            <Toggle
-              on={watchHot === true}
-              onClick={() => setValue("hot", !watchHot)}
-            ></Toggle>
-            {/* <Dropdown>
-              <Dropdown.Option>Knowledge</Dropdown.Option>
-              <Dropdown.Option>Blockchain</Dropdown.Option>
-              <Dropdown.Option>Setup</Dropdown.Option>
-              <Dropdown.Option>Nature</Dropdown.Option>
-              <Dropdown.Option>Developer</Dropdown.Option>
-            </Dropdown> */}
-          </Field>
-          <Field></Field>
         </div>
         <Button type="submit" className="mx-auto">
           Add new post
