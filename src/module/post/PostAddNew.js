@@ -14,6 +14,7 @@ import {
   ref,
   uploadBytesResumable,
   getDownloadURL,
+  deleteObject,
 } from "firebase/storage";
 import ImageUpload from "components/image/ImageUpload";
 import { addDoc, collection } from "firebase/firestore";
@@ -24,7 +25,7 @@ const storage = getStorage();
 const PostAddNewStyles = styled.div``;
 
 const PostAddNew = () => {
-  const { control, watch, setValue, handleSubmit } = useForm({
+  const { control, watch, setValue, handleSubmit, getValues } = useForm({
     mode: "onChange",
     defaultValues: {
       title: "",
@@ -92,8 +93,24 @@ const PostAddNew = () => {
     console.log(e.target.files);
     const file = e.target.files[0];
     if (!file) return;
-    setValue("image", file);
+    setValue("image_name", file.name);
     handleUploadImage(file);
+  };
+
+  const handleDeleteImage = () => {
+    const imageRef = ref(storage, "images/" + getValues("image_name"));
+
+    deleteObject(imageRef)
+      .then(() => {
+        // File deleted successfully
+        console.log("Remove image successfully");
+        setImage("");
+        setProgress(0);
+      })
+      .catch((error) => {
+        // Uh-oh, an error occurred!
+        console.log("Can't remove image");
+      });
   };
 
   return (
@@ -126,6 +143,7 @@ const PostAddNew = () => {
             author"></Input> */}
             <ImageUpload
               onChange={onSelectImage}
+              handleDeleteImage={handleDeleteImage}
               className="h-[250px]"
               progress={progress}
               image={image}
