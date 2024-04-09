@@ -22,7 +22,7 @@ const PostAddNewStyles = styled.div``;
 const PostAddNew = () => {
   const { userInfo } = useAuth();
   // console.log(userInfo);
-  const { control, watch, setValue, handleSubmit, getValues } = useForm({
+  const { control, watch, setValue, handleSubmit, getValues, reset } = useForm({
     mode: "onChange",
     defaultValues: {
       title: "",
@@ -30,6 +30,7 @@ const PostAddNew = () => {
       status: 2,
       categoryId: "",
       hot: false,
+      image: "",
     },
   });
   const watchStatus = watch("status");
@@ -38,7 +39,7 @@ const PostAddNew = () => {
     useFirebaseImage(setValue, getValues);
 
   const [categories, setCategories] = useState([]);
-
+  const [selectCategory, setSelectCategory] = useState("");
   // const watchCategory = watch("category");
 
   const addPostHandler = async (values) => {
@@ -54,6 +55,15 @@ const PostAddNew = () => {
       userId: userInfo.uid,
     });
     toast.success("Create new post successfully");
+    reset({
+      title: "",
+      slug: "",
+      status: 2,
+      categoryId: "",
+      hot: false,
+      image: "",
+    });
+    setSelectCategory({});
   };
 
   useEffect(() => {
@@ -77,6 +87,11 @@ const PostAddNew = () => {
     }
     getData();
   }, []);
+
+  const handleClickOption = (item) => {
+    setValue("categoryId", item.id);
+    setSelectCategory(item);
+  };
 
   return (
     <PostAddNewStyles>
@@ -121,13 +136,18 @@ const PostAddNew = () => {
                   categories.map((item) => (
                     <Dropdown.Option
                       key={item.id}
-                      onClick={() => setValue("categoryId", item.id)}
+                      onClick={() => handleClickOption(item)}
                     >
                       {item.name}
                     </Dropdown.Option>
                   ))}
               </Dropdown.List>
             </Dropdown>
+            {selectCategory?.name && (
+              <span className="inline-block p-3 text-sm font-medium text-green-600 rounded-lg bg-green-50">
+                {selectCategory?.name}
+              </span>
+            )}
             {/* <Input control={control} placeholder="Find the author"></Input> */}
           </Field>
         </div>
