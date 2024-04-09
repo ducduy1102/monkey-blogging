@@ -4,7 +4,7 @@ import { Dropdown } from "components/dropdown";
 import { Field } from "components/field";
 import { Input } from "components/input";
 import { Label } from "components/label";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import styled from "styled-components";
 import slugify from "slugify";
@@ -24,7 +24,7 @@ const PostAddNew = () => {
       title: "",
       slug: "",
       status: 2,
-      category: "",
+      categoryId: "",
       hot: false,
     },
   });
@@ -48,6 +48,8 @@ const PostAddNew = () => {
   const { image, progress, handleSelectImage, handleDeleteImage } =
     useFirebaseImage(setValue, getValues);
 
+  const [categories, setCategories] = useState([]);
+
   useEffect(() => {
     async function getData() {
       const colRef = collection(db, "categories");
@@ -57,15 +59,15 @@ const PostAddNew = () => {
       const querySnapshot = await getDocs(q);
       let result = [];
       querySnapshot.forEach((doc) => {
-        // doc.data() is never undefined for query doc snapshots
         // console.log(doc.id, " => ", doc.data());
         result.push({
           id: doc.id,
           ...doc.data(),
         });
       });
-      console.log(result);
-      console.log(querySnapshot);
+      // console.log(result);
+      // console.log(querySnapshot);
+      setCategories(result);
     }
     getData();
   }, []);
@@ -106,7 +108,21 @@ const PostAddNew = () => {
           </Field>
           <Field>
             <Label>Category</Label>
-            <Input control={control} placeholder="Find the author"></Input>
+            <Dropdown>
+              <Dropdown.Select placeholder="Select the category"></Dropdown.Select>
+              <Dropdown.List>
+                {categories.length > 0 &&
+                  categories.map((item) => (
+                    <Dropdown.Option
+                      key={item.id}
+                      onClick={() => setValue("categoryId", item.id)}
+                    >
+                      {item.name}
+                    </Dropdown.Option>
+                  ))}
+              </Dropdown.List>
+            </Dropdown>
+            {/* <Input control={control} placeholder="Find the author"></Input> */}
           </Field>
         </div>
         <div className="grid grid-cols-2 mb-10 gap-x-10">
@@ -116,13 +132,6 @@ const PostAddNew = () => {
               on={watchHot === true}
               onClick={() => setValue("hot", !watchHot)}
             ></Toggle>
-            {/* <Dropdown>
-              <Dropdown.Option>Knowledge</Dropdown.Option>
-              <Dropdown.Option>Blockchain</Dropdown.Option>
-              <Dropdown.Option>Setup</Dropdown.Option>
-              <Dropdown.Option>Nature</Dropdown.Option>
-              <Dropdown.Option>Developer</Dropdown.Option>
-            </Dropdown> */}
           </Field>
           <Field>
             <Label>Status</Label>
