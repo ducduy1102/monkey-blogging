@@ -64,22 +64,23 @@ const PostFeatureItem = ({ data }) => {
     }
 
     fetch();
-    // const colRef = collection(db, "categories");
-    // const queries = query(colRef, where("id", "==", data.categoryId));
-    // const demo = getDoc(queries);
-    // console.log(demo);
   }, [data.categoryId]);
 
   useEffect(() => {
     async function fetchUser() {
-      const docRef = doc(db, "users", data.userId);
-      const docSnap = await getDoc(docRef);
-      setUser(docSnap.data());
+      if (data.userId) {
+        const docRef = doc(db, "users", data.userId);
+        const docSnap = await getDoc(docRef);
+        if (docSnap.data) {
+          setUser(docSnap.data());
+        }
+      }
     }
     fetchUser();
   }, [data.userId]);
 
   if (!data || !data.id) return null;
+  console.log(user);
   return (
     <PostFeatureItemStyles>
       <PostImage url={data.image} alt="unsplash"></PostImage>
@@ -88,7 +89,7 @@ const PostFeatureItem = ({ data }) => {
       <div className="post-content">
         <div className="post-top">
           {category?.name && <PostCategory>{category.name}</PostCategory>}
-          <PostMeta authorName={user?.name}></PostMeta>
+          <PostMeta authorName={user?.fullname}></PostMeta>
         </div>
         <PostTitle size="big">{data.title}</PostTitle>
       </div>
