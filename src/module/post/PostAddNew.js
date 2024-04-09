@@ -68,7 +68,7 @@ const PostAddNew = () => {
         ...cloneValues,
         image,
         userId: userInfo.uid,
-        createAt: serverTimestamp(),
+        createdAt: serverTimestamp(),
       });
       toast.success("Create new post successfully");
       reset({
