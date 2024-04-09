@@ -4,8 +4,9 @@ import PostCategory from "./PostCategory";
 import PostTitle from "./PostTitle";
 import PostMeta from "./PostMeta";
 import PostImage from "./PostImage";
-import { collection, doc, getDoc, query, where } from "firebase/firestore";
+import { doc, getDoc } from "firebase/firestore";
 import { db } from "firebase-app/firebase-config";
+import slugify from "slugify";
 
 const PostFeatureItemStyles = styled.div`
   width: 100%;
@@ -80,7 +81,7 @@ const PostFeatureItem = ({ data }) => {
   }, [data.userId]);
 
   if (!data || !data.id) return null;
-  console.log(user);
+  // console.log(user);
   return (
     <PostFeatureItemStyles>
       <PostImage url={data.image} alt="unsplash"></PostImage>
@@ -88,10 +89,18 @@ const PostFeatureItem = ({ data }) => {
       <div className="post-overlay"></div>
       <div className="post-content">
         <div className="post-top">
-          {category?.name && <PostCategory>{category.name}</PostCategory>}
-          <PostMeta authorName={user?.fullname}></PostMeta>
+          {category?.name && (
+            <PostCategory to={category.slug}>{category.name}</PostCategory>
+          )}
+          <PostMeta
+            to={slugify(user?.fullname || "", { lower: true })}
+            authorName={user?.fullname}
+            // date={data?.createdAt || ""}
+          ></PostMeta>
         </div>
-        <PostTitle size="big">{data.title}</PostTitle>
+        <PostTitle size="big" to={data.slug}>
+          {data.title}
+        </PostTitle>
       </div>
     </PostFeatureItemStyles>
   );
