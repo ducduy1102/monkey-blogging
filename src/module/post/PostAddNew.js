@@ -4,7 +4,7 @@ import { Dropdown } from "components/dropdown";
 import { Field } from "components/field";
 import { Input } from "components/input";
 import { Label } from "components/label";
-import React from "react";
+import React, { useState } from "react";
 import { useForm } from "react-hook-form";
 import styled from "styled-components";
 import slugify from "slugify";
@@ -15,6 +15,9 @@ import {
   uploadBytesResumable,
   getDownloadURL,
 } from "firebase/storage";
+import ImageUpload from "components/image/ImageUpload";
+import { addDoc, collection } from "firebase/firestore";
+import { db } from "firebase-app/firebase-config";
 
 const storage = getStorage();
 
@@ -39,8 +42,14 @@ const PostAddNew = () => {
     cloneValues.slug = slugify(values.slug || values.title);
     cloneValues.status = Number(values.status);
     console.log(cloneValues);
+    // const colRef = collection(db, "posts");
+    // await addDoc(colRef, {
+    //   // image:
+    // })
     // handleUploadImage(cloneValues.image);
   };
+  const [progress, setProgress] = useState(0);
+  const [image, setImage] = useState("");
 
   const handleUploadImage = (file) => {
     // Upload file and metadata to the object 'images/mountains.jpg'
@@ -51,9 +60,10 @@ const PostAddNew = () => {
     uploadTask.on(
       "state_changed",
       (snapshot) => {
-        const progress =
+        const progressPercent =
           (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-        console.log("Upload is " + progress + "% done");
+        // console.log("Upload is " + progress + "% done");
+        setProgress(progressPercent);
         switch (snapshot.state) {
           case "paused":
             console.log("Upload is paused");
@@ -72,6 +82,7 @@ const PostAddNew = () => {
         // Upload completed successfully, now we can get the download URL
         getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
           console.log("File available at", downloadURL);
+          setImage(downloadURL);
         });
       }
     );
@@ -82,6 +93,7 @@ const PostAddNew = () => {
     const file = e.target.files[0];
     if (!file) return;
     setValue("image", file);
+    handleUploadImage(file);
   };
 
   return (
@@ -112,7 +124,12 @@ const PostAddNew = () => {
             <Label>Image</Label>
             {/* <Input control={control} placeholder="Find the 
             author"></Input> */}
-            <input type="file" name="image" onChange={onSelectImage} />
+            <ImageUpload
+              onChange={onSelectImage}
+              className="h-[250px]"
+              progress={progress}
+              image={image}
+            ></ImageUpload>
           </Field>
           <Field>
             <Label>Status</Label>
