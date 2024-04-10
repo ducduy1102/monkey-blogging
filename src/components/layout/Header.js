@@ -1,11 +1,8 @@
 import { Button } from "components/button";
 import { useAuth } from "contexts/auth-context";
-import { auth } from "firebase-app/firebase-config";
 import React from "react";
 import { NavLink } from "react-router-dom";
 import styled from "styled-components";
-
-// optimize
 const menuLinks = [
   {
     url: "/",
@@ -20,75 +17,67 @@ const menuLinks = [
     title: "Contact",
   },
 ];
-const HeaderStyles = styled.header`
-  padding: 40px 0;
 
+const HeaderStyles = styled.header`
+  padding: 20px 0;
   .header-main {
     display: flex;
     align-items: center;
   }
-
+  .header-auth {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+  }
   .logo {
     display: block;
     max-width: 50px;
   }
-
   .menu {
     display: flex;
     align-items: center;
     gap: 20px;
     margin-left: 40px;
     list-style: none;
-    font-weight: 600;
+    font-weight: 500;
   }
-
-  /* .header-right {
-    margin: auto;
-    flex: 1;
-  } */
-
   .search {
-    position: relative;
     margin-left: auto;
-    display: flex;
-    align-items: center;
     padding: 15px 25px;
     border: 1px solid #ccc;
     border-radius: 8px;
     width: 100%;
     max-width: 320px;
+    display: flex;
+    align-items: center;
+    position: relative;
     margin-right: 20px;
   }
-
   .search-input {
     flex: 1;
     padding-right: 45px;
     font-weight: 500;
   }
-
   .search-icon {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
     right: 25px;
   }
-
-  .header-button {
-    margin-left: 20px;
+  @media screen and (max-width: 1023.98px) {
+    .logo {
+      max-width: 30px;
+    }
+    .menu,
+    .search,
+    .header-button,
+    .header-auth {
+      display: none;
+    }
   }
-
-  /* .header-auth {} */
 `;
-
-function getLastName(name) {
-  if (!name) return "User";
-  const length = name.split(" ").length;
-  return name.split(" ")[length - 1];
-}
-
 const Header = () => {
   const { userInfo } = useAuth();
-  // console.log(userInfo);
   return (
     <HeaderStyles>
       <div className="container">
@@ -109,9 +98,9 @@ const Header = () => {
             <input
               type="text"
               className="search-input"
-              placeholder="Search post..."
+              placeholder="Search posts..."
             />
-            <div className="search-icon">
+            <span className="search-icon">
               <svg
                 width="18"
                 height="17"
@@ -140,23 +129,27 @@ const Header = () => {
                   strokeLinecap="round"
                 />
               </svg>
-            </div>
+            </span>
           </div>
           {!userInfo ? (
             <Button
               type="button"
               height="56px"
               className="header-button"
-              to="/sign-up"
+              to="/sign-in"
             >
-              Sign Up
+              Login
             </Button>
           ) : (
             <div className="header-auth">
-              <span>Welcome back, </span>
-              <strong className="text-primary">
-                {getLastName(userInfo?.displayName)}
-              </strong>
+              <Button
+                type="button"
+                height="56px"
+                className="header-button"
+                to="/dashboard"
+              >
+                Dashboard
+              </Button>
             </div>
           )}
         </div>
