@@ -1,14 +1,14 @@
 import React from "react";
 import styled from "styled-components";
 import PostCategory from "./PostCategory";
-import PostTitle from "./PostTitle";
-import PostMeta from "./PostMeta";
 import PostImage from "./PostImage";
+import PostMeta from "./PostMeta";
+import PostTitle from "./PostTitle";
 const PostNewestLargeStyles = styled.div`
   .post {
     &-image {
       display: block;
-      margin-bottom: 16px;
+      margin-bottom: 20px;
       height: 433px;
       border-radius: 16px;
     }
@@ -16,7 +16,12 @@ const PostNewestLargeStyles = styled.div`
       margin-bottom: 10px;
     }
     &-title {
-      margin-bottom: 10px;
+      margin-bottom: 20px;
+    }
+    @media screen and (max-width: 1023.98px) {
+      &-image {
+        height: 250px;
+      }
     }
   }
 `;
@@ -29,9 +34,9 @@ const PostNewestLarge = () => {
         alt=""
       ></PostImage>
 
-      <PostCategory>Kiến thức</PostCategory>
+      <PostCategory>Knowledge</PostCategory>
       <PostTitle size="big">
-        Hướng dẫn setup phòng cực chill dành cho người mới toàn tập
+        The complete guide to learn new languages for beginners
       </PostTitle>
       <PostMeta></PostMeta>
     </PostNewestLargeStyles>

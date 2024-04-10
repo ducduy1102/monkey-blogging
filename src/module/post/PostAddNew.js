@@ -123,7 +123,7 @@ const PostAddNew = () => {
     <PostAddNewStyles>
       <h1 className="dashboard-heading">Add new post</h1>
       <form onSubmit={handleSubmit(addPostHandler)}>
-        <div className="grid grid-cols-2 mb-10 gap-x-10">
+        <div className="form-layout">
           <Field>
             <Label>Title</Label>
             <Input
@@ -142,7 +142,7 @@ const PostAddNew = () => {
             ></Input>
           </Field>
         </div>
-        <div className="grid grid-cols-2 mb-10 gap-x-10">
+        <div className="form-layout">
           <Field>
             <Label>Image</Label>
             <ImageUpload
@@ -176,7 +176,7 @@ const PostAddNew = () => {
             )}
           </Field>
         </div>
-        <div className="grid grid-cols-2 mb-10 gap-x-10">
+        <div className="form-layout">
           <Field>
             <Label>Feature Post</Label>
             <Toggle
@@ -186,7 +186,7 @@ const PostAddNew = () => {
           </Field>
           <Field>
             <Label>Status</Label>
-            <div className="flex items-center gap-x-5">
+            <div className="flex flex-wrap items-center gap-5">
               <Radio
                 name="status"
                 control={control}
