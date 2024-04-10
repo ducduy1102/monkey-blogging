@@ -34,6 +34,14 @@ const SignInPage = () => {
     mode: "onChange",
     resolver: yupResolver(schema),
   });
+
+  useEffect(() => {
+    const arrErrors = Object.values(errors);
+    if (arrErrors.length > 0) {
+      toast.error(arrErrors[0]?.message, { pauseOnHover: false, delay: 0 });
+    }
+  }, [errors]);
+
   const { userInfo } = useAuth();
   //   //   console.log(userInfo);
   const navigate = useNavigate();
@@ -43,16 +51,17 @@ const SignInPage = () => {
   }, []);
   const handleSignIn = async (values) => {
     if (!isValid) return;
-    await signInWithEmailAndPassword(auth, values.email, values.password);
-    navigate("/");
+    // await signInWithEmailAndPassword(auth, values.email, values.password);
+    // navigate("/");
+    try {
+      await signInWithEmailAndPassword(auth, values.email, values.password);
+      navigate("/");
+    } catch (error) {
+      if (error.message.includes("wrong-password"))
+        toast.error("It seems your password was wrong");
+    }
   };
 
-  useEffect(() => {
-    const arrErrors = Object.values(errors);
-    if (arrErrors.length > 0) {
-      toast.error(arrErrors[0]?.message, { pauseOnHover: false, delay: 0 });
-    }
-  }, [errors]);
   return (
     <AuthenticationPage>
       <form
