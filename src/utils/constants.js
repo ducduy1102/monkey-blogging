@@ -1,14 +1,17 @@
 export const theme = {
-  primary: "#2ebac1",
-  secondary: "#a4d96c",
-  grayDark: "#292d32",
-  grayLight: "#e7ecf3",
+  primary: "#1DC071",
+  secondary: "#A4D96C",
+  grayDark: "#292D32",
+  grayLight: "#E7ECF3",
   tertiary: "#3A1097",
-  accent: "#00d1ed",
-  grayF3: "#f3edff",
-  gray6B: "#6b6b6b",
+  accent: "#00D1ED",
+  grayF3: "#F3EDFF",
+  gray6B: "#6B6B6B",
   gray23: "#232323",
+  gray4b: "#4B5264",
+  grayf1: "#F1F1F3",
   gray80: "#808191",
+  black: "#171725",
 };
 
 export const postStatus = {

@@ -174,7 +174,6 @@ const PostAddNew = () => {
                 {selectCategory?.name}
               </span>
             )}
-            {/* <Input control={control} placeholder="Find the author"></Input> */}
           </Field>
         </div>
         <div className="grid grid-cols-2 mb-10 gap-x-10">
