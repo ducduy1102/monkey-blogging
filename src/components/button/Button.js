@@ -29,11 +29,12 @@ const ButtonStyles = styled.button`
     props.kind === "primary" &&
     css`
       color: white;
-      background-image: linear-gradient(
+      background-color: ${(props) => props.theme.primary};
+      /* background-image: linear-gradient(
         to right bottom,
         ${(props) => props.theme.primary},
         ${(props) => props.theme.secondary}
-      );
+      ); */
     `};
   ${(props) =>
     props.kind === "ghost" &&
