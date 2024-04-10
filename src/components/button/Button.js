@@ -11,7 +11,7 @@ const ButtonStyles = styled.button`
   color: white;
   border-radius: 8px;
   font-weight: 600;
-  font-size: 18px;
+  font-size: 16px;
   /* width: 100%; */
   height: ${(props) => props.height || "66px"};
 
