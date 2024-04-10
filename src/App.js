@@ -12,6 +12,8 @@ import PageNotFound from "pages/PageNotFound";
 import CategoryAddNew from "module/category/CategoryAddNew";
 import UserAddNew from "module/user/UserAddNew";
 import UserProfile from "module/user/UserProfile";
+import CategoryManage from "module/category/CategoryManage";
+import UserManage from "module/user/UserManage";
 
 function App() {
   // const {userInfo} = useAuth();
@@ -33,7 +35,7 @@ function App() {
               element={<DashboardPage></DashboardPage>}
             ></Route>
             <Route
-              path="/manage/post"
+              path="/manage/posts"
               element={<PostManage></PostManage>}
             ></Route>
             <Route
@@ -41,8 +43,16 @@ function App() {
               element={<PostAddNew></PostAddNew>}
             ></Route>
             <Route
+              path="/manage/category"
+              element={<CategoryManage></CategoryManage>}
+            ></Route>
+            <Route
               path="/manage/add-category"
               element={<CategoryAddNew></CategoryAddNew>}
+            ></Route>
+            <Route
+              path="/manage/user"
+              element={<UserManage></UserManage>}
             ></Route>
             <Route
               path="/manage/add-user"
