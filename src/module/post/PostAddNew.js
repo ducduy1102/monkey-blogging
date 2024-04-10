@@ -1,7 +1,7 @@
 import { Button } from "components/button";
 import { Radio } from "components/checkbox";
 import { Dropdown } from "components/dropdown";
-import { Field } from "components/field";
+import { Field, FieldCheckboxes } from "components/field";
 import { Input } from "components/input";
 import { Label } from "components/label";
 import React, { useEffect, useState } from "react";
@@ -23,8 +23,7 @@ import useFirebaseImage from "hooks/useFirebaseImage";
 import Toggle from "components/toggle/Toggle";
 import { useAuth } from "contexts/auth-context";
 import { toast } from "react-toastify";
-
-const PostAddNewStyles = styled.div``;
+import DashboardHeading from "module/dashboard/DashboardHeading";
 
 const PostAddNew = () => {
   const { userInfo } = useAuth();
@@ -120,8 +119,8 @@ const PostAddNew = () => {
   };
 
   return (
-    <PostAddNewStyles>
-      <h1 className="dashboard-heading">Add new post</h1>
+    <>
+      <DashboardHeading title="Add post" desc="Add new post"></DashboardHeading>
       <form onSubmit={handleSubmit(addPostHandler)}>
         <div className="form-layout">
           <Field>
@@ -186,7 +185,7 @@ const PostAddNew = () => {
           </Field>
           <Field>
             <Label>Status</Label>
-            <div className="flex flex-wrap items-center gap-5">
+            <FieldCheckboxes>
               <Radio
                 name="status"
                 control={control}
@@ -214,7 +213,7 @@ const PostAddNew = () => {
               >
                 Reject
               </Radio>
-            </div>
+            </FieldCheckboxes>
           </Field>
         </div>
         <Button
@@ -226,7 +225,7 @@ const PostAddNew = () => {
           Add new post
         </Button>
       </form>
-    </PostAddNewStyles>
+    </>
   );
 };
 

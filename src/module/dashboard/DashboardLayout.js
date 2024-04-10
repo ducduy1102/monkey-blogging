@@ -1,10 +1,10 @@
 import { useAuth } from "contexts/auth-context";
+import PageNotFound from "pages/PageNotFound";
 import React from "react";
 import { Outlet } from "react-router-dom";
 import styled from "styled-components";
 import DashboardHeader from "./DashboardHeader";
 import Sidebar from "./Sidebar";
-import PageNotFound from "pages/PageNotFound";
 const DashboardStyles = styled.div`
   max-width: 1600px;
   margin: 0 auto;
@@ -17,7 +17,6 @@ const DashboardStyles = styled.div`
     }
     &-short-desc {
       font-size: 14px;
-      margin-bottom: 40px;
       color: ${(props) => props.theme.gray80};
     }
     &-main {
@@ -31,9 +30,6 @@ const DashboardStyles = styled.div`
       &-heading {
         font-size: 20px;
       }
-      &-short-desc {
-        margin-bottom: 25px;
-      }
       &-main {
         grid-template-columns: 100%;
         padding: 20px;
@@ -41,7 +37,7 @@ const DashboardStyles = styled.div`
     }
   }
 `;
-const DashboardLayout = ({ children }) => {
+const DashboardLayout = () => {
   const { userInfo } = useAuth();
   if (!userInfo) return <PageNotFound></PageNotFound>;
   return (
