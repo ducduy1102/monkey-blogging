@@ -14,6 +14,7 @@ import UserAddNew from "module/user/UserAddNew";
 import UserProfile from "module/user/UserProfile";
 import CategoryManage from "module/category/CategoryManage";
 import UserManage from "module/user/UserManage";
+import CategoryUpdate from "module/category/CategoryUpdate";
 
 function App() {
   // const {userInfo} = useAuth();
@@ -49,6 +50,10 @@ function App() {
             <Route
               path="/manage/add-category"
               element={<CategoryAddNew></CategoryAddNew>}
+            ></Route>
+            <Route
+              path="/manage/update-category"
+              element={<CategoryUpdate></CategoryUpdate>}
             ></Route>
             <Route
               path="/manage/user"
