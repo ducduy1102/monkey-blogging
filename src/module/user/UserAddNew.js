@@ -9,11 +9,38 @@ import DashboardHeading from "module/dashboard/DashboardHeading";
 import React from "react";
 import { useForm } from "react-hook-form";
 import { userRole, userStatus } from "utils/constants";
-// import { createUserWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword } from "firebase/auth";
+import { auth, db } from "firebase-app/firebase-config";
+import {
+  addDoc,
+  collection,
+  serverTimestamp,
+  setDoc,
+} from "firebase/firestore";
+import slugify from "slugify";
+import { toast } from "react-toastify";
 
 const UserAddNew = () => {
-  const { control, handleSubmit, setValue, getValues, watch } = useForm({
+  const {
+    control,
+    handleSubmit,
+    setValue,
+    getValues,
+    watch,
+    formState: { isValid, isSubmitting },
+    reset,
+  } = useForm({
     mode: "onChange",
+    defaultValues: {
+      fullname: "",
+      email: "",
+      password: "",
+      username: "",
+      avatar: "",
+      status: userStatus.ACTIVE,
+      role: userRole.USER,
+      createdAt: new Date(),
+    },
   });
   const {
     image,
@@ -23,8 +50,43 @@ const UserAddNew = () => {
     handleDeleteImage,
   } = useFirebaseImage(setValue, getValues);
 
-  const handleCreateUser = (values) => {
+  const handleCreateUser = async (values) => {
+    if (!isValid) return;
     console.log(values);
+    try {
+      await createUserWithEmailAndPassword(auth, values.email, values.password);
+      await addDoc(collection(db, "users"), {
+        fullname: values.fullname,
+        email: values.email,
+        password: values.password,
+        username: slugify(values.username || values.fullname, {
+          lower: true,
+          replacement: " ",
+          trim: true,
+        }),
+        avatar: image,
+        status: Number(values.status),
+        role: Number(values.role),
+        createdAt: serverTimestamp(),
+      });
+      toast.success(
+        `Create new user with email: ${values.email} successfully!`
+      );
+      reset({
+        fullname: "",
+        email: "",
+        password: "",
+        username: "",
+        avatar: "",
+        status: userStatus.ACTIVE,
+        role: userRole.USER,
+        createdAt: new Date(),
+      });
+      handleResetUpload();
+    } catch (error) {
+      console.log(error);
+      toast.error("Can't create new user");
+    }
   };
   const watchStatus = watch("status");
   const watchRole = watch("role");
@@ -38,7 +100,7 @@ const UserAddNew = () => {
       <form onSubmit={handleSubmit(handleCreateUser)}>
         <div className="w-[200px] h-[200px] mx-auto rounded-full mb-10">
           <ImageUpload
-            className="!rounded-full"
+            className="!rounded-full h-full"
             onChange={handleSelectImage}
             handleDeleteImage={handleDeleteImage}
             progress={progress}
@@ -143,7 +205,13 @@ const UserAddNew = () => {
             </FieldCheckboxes>
           </Field>
         </div>
-        <Button kind="primary" className="mx-auto w-[200px]" type="submit">
+        <Button
+          kind="primary"
+          className="mx-auto w-[200px]"
+          type="submit"
+          disabled={isSubmitting}
+          isLoading={isSubmitting}
+        >
           Add new user
         </Button>
       </form>
