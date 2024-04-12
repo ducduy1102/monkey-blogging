@@ -15,6 +15,7 @@ const TableStyles = styled.div`
   td {
     font-weight: 500;
     vertical-align: middle;
+    white-space: nowrap;
   }
   th {
     padding: 20px 30px;
