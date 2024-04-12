@@ -1,23 +1,50 @@
 import { Button } from "components/button";
 import { Radio } from "components/checkbox";
 import { Field, FieldCheckboxes } from "components/field";
+import ImageUpload from "components/image/ImageUpload";
 import { Input } from "components/input";
 import { Label } from "components/label";
+import useFirebaseImage from "hooks/useFirebaseImage";
 import DashboardHeading from "module/dashboard/DashboardHeading";
 import React from "react";
 import { useForm } from "react-hook-form";
+import { userRole, userStatus } from "utils/constants";
+// import { createUserWithEmailAndPassword } from "firebase/auth";
 
 const UserAddNew = () => {
-  const { control } = useForm({
+  const { control, handleSubmit, setValue, getValues, watch } = useForm({
     mode: "onChange",
   });
+  const {
+    image,
+    progress,
+    handleResetUpload,
+    handleSelectImage,
+    handleDeleteImage,
+  } = useFirebaseImage(setValue, getValues);
+
+  const handleCreateUser = (values) => {
+    console.log(values);
+  };
+  const watchStatus = watch("status");
+  const watchRole = watch("role");
+
   return (
     <div>
       <DashboardHeading
         title="New user"
         desc="Add new user to system"
       ></DashboardHeading>
-      <form>
+      <form onSubmit={handleSubmit(handleCreateUser)}>
+        <div className="w-[200px] h-[200px] mx-auto rounded-full mb-10">
+          <ImageUpload
+            className="!rounded-full"
+            onChange={handleSelectImage}
+            handleDeleteImage={handleDeleteImage}
+            progress={progress}
+            image={image}
+          ></ImageUpload>
+        </div>
         <div className="form-layout">
           <Field>
             <Label>Fullname</Label>
@@ -60,13 +87,28 @@ const UserAddNew = () => {
           <Field>
             <Label>Status</Label>
             <FieldCheckboxes>
-              <Radio name="status" control={control}>
+              <Radio
+                name="status"
+                control={control}
+                checked={Number(watchStatus) === userStatus.ACTIVE}
+                value={userStatus.ACTIVE}
+              >
                 Active
               </Radio>
-              <Radio name="status" control={control}>
+              <Radio
+                name="status"
+                control={control}
+                checked={Number(watchStatus) === userStatus.PENDING}
+                value={userStatus.PENDING}
+              >
                 Pending
               </Radio>
-              <Radio name="status" control={control}>
+              <Radio
+                name="status"
+                control={control}
+                checked={Number(watchStatus) === userStatus.BAN}
+                value={userStatus.BAN}
+              >
                 Banned
               </Radio>
             </FieldCheckboxes>
@@ -74,22 +116,34 @@ const UserAddNew = () => {
           <Field>
             <Label>Role</Label>
             <FieldCheckboxes>
-              <Radio name="role" control={control}>
+              <Radio
+                name="role"
+                control={control}
+                checked={Number(watchRole) === userRole.ADMIN}
+                value={userRole.ADMIN}
+              >
                 Admin
               </Radio>
-              <Radio name="role" control={control}>
+              <Radio
+                name="role"
+                control={control}
+                checked={Number(watchRole) === userRole.MOD}
+                value={userRole.MOD}
+              >
                 Moderator
               </Radio>
-              <Radio name="role" control={control}>
-                Editor
-              </Radio>
-              <Radio name="role" control={control}>
+              <Radio
+                name="role"
+                control={control}
+                checked={Number(watchRole) === userRole.USER}
+                value={userRole.USER}
+              >
                 User
               </Radio>
             </FieldCheckboxes>
           </Field>
         </div>
-        <Button kind="primary" className="mx-auto w-[200px]">
+        <Button kind="primary" className="mx-auto w-[200px]" type="submit">
           Add new user
         </Button>
       </form>

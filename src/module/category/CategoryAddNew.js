@@ -91,7 +91,7 @@ const CategoryAddNew = () => {
               <Radio
                 name="status"
                 control={control}
-                checked={Number(watchStatus) === 1}
+                checked={Number(watchStatus) === categoryStatus.APPROVED}
                 value={categoryStatus.APPROVED}
               >
                 Approved
@@ -99,7 +99,7 @@ const CategoryAddNew = () => {
               <Radio
                 name="status"
                 control={control}
-                checked={Number(watchStatus) === 2}
+                checked={Number(watchStatus) === categoryStatus.UNAPPROVED}
                 value={categoryStatus.UNAPPROVED}
               >
                 Unapproved

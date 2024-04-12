@@ -3,8 +3,6 @@ import React, { useState } from "react";
 import UserTable from "./UserTable";
 
 const UserManage = () => {
-  const [user, setUser] = useState([]);
-
   return (
     <div>
       <DashboardHeading
