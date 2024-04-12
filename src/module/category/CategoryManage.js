@@ -8,9 +8,11 @@ import {
   deleteDoc,
   doc,
   getDoc,
+  getDocs,
   limit,
   onSnapshot,
   query,
+  startAfter,
   where,
 } from "firebase/firestore";
 import DashboardHeading from "module/dashboard/DashboardHeading";
@@ -22,33 +24,75 @@ import { debounce } from "lodash";
 
 const CategoryManage = () => {
   const [categoryList, setCategoryList] = useState([]);
-  const [categoryCount, setCategoryCount] = useState(0);
   const navigate = useNavigate();
-  // const inputRef = useRef("");
   const [filter, setFilter] = useState("");
+  const [lastDoc, setLastDoc] = useState();
 
-  useEffect(() => {
-    const colRef = collection(db, "categories");
-    const newRef = filter
-      ? query(
-          colRef,
-          where("name", ">=", filter),
-          where("name", "<=", filter + "utf8")
-        )
-      : colRef;
-    onSnapshot(newRef, (snapshot) => {
+  const handleLoadMoreCategory = async () => {
+    // Query the first page of docs
+    // const first = query(collection(db, "categories"), limit(1));
+    // const documentSnapshots = await getDocs(first);
+
+    // Get the last visible document
+    // const lastVisible =
+    //   documentSnapshots.docs[documentSnapshots.docs.length - 1];
+    // console.log("last", lastVisible);
+
+    // Construct a new query starting at this document,
+    // get the next 1 category.
+    const nextRef = query(
+      collection(db, "categories"),
+      startAfter(lastDoc || 0),
+      limit(1)
+    );
+
+    onSnapshot(nextRef, (snapshot) => {
       let results = [];
       console.log(snapshot.size);
-      // convert cho chac
-      setCategoryCount(Number(snapshot.size));
       snapshot.forEach((doc) => {
         results.push({
           id: doc.id,
           ...doc.data(),
         });
       });
-      setCategoryList(results);
+      // setCategoryList(results);
+      setCategoryList([...categoryList, ...results]);
     });
+    setLastDoc(nextRef);
+  };
+
+  useEffect(() => {
+    async function fetchData() {
+      const colRef = collection(db, "categories");
+      const newRef = filter
+        ? query(
+            colRef,
+            where("name", ">=", filter),
+            where("name", "<=", filter + "utf8")
+          )
+        : query(colRef, limit(1));
+
+      // const first = query(collection(db, "categories"), limit(1));
+      const documentSnapshots = await getDocs(newRef);
+
+      const lastVisible =
+        documentSnapshots.docs[documentSnapshots.docs.length - 1];
+      // console.log("last", lastVisible);
+      setLastDoc(lastVisible);
+
+      onSnapshot(newRef, (snapshot) => {
+        let results = [];
+        console.log(snapshot.size);
+        snapshot.forEach((doc) => {
+          results.push({
+            id: doc.id,
+            ...doc.data(),
+          });
+        });
+        setCategoryList(results);
+      });
+    }
+    fetchData();
   }, [filter]);
   // console.log(categoryList);
   const handleDeleteCategory = async (docId) => {
@@ -137,6 +181,9 @@ const CategoryManage = () => {
             ))}
         </tbody>
       </Table>
+      <div className="mt-10">
+        <button onClick={handleLoadMoreCategory}>Load more</button>
+      </div>
     </div>
   );
 };
