@@ -8,6 +8,7 @@ import {
   deleteDoc,
   doc,
   getDoc,
+  limit,
   onSnapshot,
   query,
   where,
@@ -21,15 +22,25 @@ import { debounce } from "lodash";
 
 const CategoryManage = () => {
   const [categoryList, setCategoryList] = useState([]);
+  const [categoryCount, setCategoryCount] = useState(0);
   const navigate = useNavigate();
   // const inputRef = useRef("");
   const [filter, setFilter] = useState("");
 
   useEffect(() => {
     const colRef = collection(db, "categories");
-    const newRef = filter ? query(colRef, where("name", "==", filter)) : colRef;
+    const newRef = filter
+      ? query(
+          colRef,
+          where("name", ">=", filter),
+          where("name", "<=", filter + "utf8")
+        )
+      : colRef;
     onSnapshot(newRef, (snapshot) => {
       let results = [];
+      console.log(snapshot.size);
+      // convert cho chac
+      setCategoryCount(Number(snapshot.size));
       snapshot.forEach((doc) => {
         results.push({
           id: doc.id,
