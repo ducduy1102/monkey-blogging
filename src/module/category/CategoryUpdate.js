@@ -3,27 +3,65 @@ import { Radio } from "components/checkbox";
 import { Field, FieldCheckboxes } from "components/field";
 import { Input } from "components/input";
 import { Label } from "components/label";
+import { db } from "firebase-app/firebase-config";
+import { doc, getDoc, updateDoc } from "firebase/firestore";
 import DashboardHeading from "module/dashboard/DashboardHeading";
-import React from "react";
+import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useSearchParams } from "react-router-dom";
+import { categoryStatus } from "utils/constants";
+import slugify from "slugify";
+import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 const CategoryUpdate = () => {
-  const { control } = useForm({
+  const {
+    control,
+    reset,
+    watch,
+    handleSubmit,
+    formState: { isSubmitting },
+  } = useForm({
     mode: "onChange",
     defaultValues: {},
   });
   const [params] = useSearchParams();
-  //   console.log(params.get("id"));
   const categoryId = params.get("id");
+  //   console.log(params.get("id"));
+
+  const navigate = useNavigate();
+  useEffect(() => {
+    async function fetchData() {
+      const colRef = doc(db, "categories", categoryId);
+      const singleDoc = await getDoc(colRef);
+      //   console.log(singleDoc.data());
+      reset(singleDoc.data());
+    }
+    fetchData();
+  }, [categoryId, reset]);
+
   if (!categoryId) return null;
+
+  const watchStatus = watch("status");
+  const handleUpdateCategory = async (values) => {
+    // console.log(values);
+    const colRef = doc(db, "categories", categoryId);
+    await updateDoc(colRef, {
+      name: values.name,
+      slug: slugify(values.slug || values.name, { lower: true }),
+      status: Number(values.status),
+    });
+    toast.success("Update category successfully");
+    navigate("/manage/category");
+  };
+
   return (
     <div>
       <DashboardHeading
         title="Update category"
         desc={`Update your category id ${categoryId}`}
       ></DashboardHeading>
-      <form onSubmit={handleSubmit(handleAddNewCategory)} autoComplete="off">
+      <form onSubmit={handleSubmit(handleUpdateCategory)} autoComplete="off">
         <div className="form-layout">
           <Field>
             <Label>Name</Label>
