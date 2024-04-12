@@ -9,20 +9,26 @@ import {
   doc,
   getDoc,
   onSnapshot,
+  query,
+  where,
 } from "firebase/firestore";
 import DashboardHeading from "module/dashboard/DashboardHeading";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { categoryStatus } from "utils/constants";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
+import { debounce } from "lodash";
 
 const CategoryManage = () => {
   const [categoryList, setCategoryList] = useState([]);
   const navigate = useNavigate();
+  // const inputRef = useRef("");
+  const [filter, setFilter] = useState("");
 
   useEffect(() => {
     const colRef = collection(db, "categories");
-    onSnapshot(colRef, (snapshot) => {
+    const newRef = filter ? query(colRef, where("name", "==", filter)) : colRef;
+    onSnapshot(newRef, (snapshot) => {
       let results = [];
       snapshot.forEach((doc) => {
         results.push({
@@ -32,7 +38,7 @@ const CategoryManage = () => {
       });
       setCategoryList(results);
     });
-  }, []);
+  }, [filter]);
   // console.log(categoryList);
   const handleDeleteCategory = async (docId) => {
     const colRef = doc(db, "categories", docId);
@@ -57,6 +63,10 @@ const CategoryManage = () => {
     });
   };
 
+  const handleInputFilter = debounce((e) => {
+    setFilter(e.target.value);
+  }, 500);
+
   return (
     <div>
       <DashboardHeading title="Categories" desc="Manage your category">
@@ -64,6 +74,14 @@ const CategoryManage = () => {
           Create category
         </Button>
       </DashboardHeading>
+      <div className="flex justify-end mb-10">
+        <input
+          type="text"
+          placeholder="Search category..."
+          className="px-5 py-4 border border-gray-300 rounded-lg"
+          onChange={handleInputFilter}
+        />
+      </div>
       <Table>
         <thead>
           <tr>
