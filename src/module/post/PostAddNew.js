@@ -39,6 +39,7 @@ const PostAddNew = () => {
       category: {},
       hot: false,
       image: "",
+      user: {},
     },
   });
   const watchStatus = watch("status");
@@ -57,18 +58,25 @@ const PostAddNew = () => {
   // const watchCategory = watch("category");
 
   useEffect(() => {
-    if (!userInfo.uid) return;
+    if (!userInfo.email) return;
     async function fetchUserData() {
-      const colRef = doc(db, "users", userInfo.uid);
-      const docData = await getDoc(colRef);
-      // console.log(docData.data());
-      setValue("user", {
-        id: docData.id,
-        ...docData.data(),
+      const q = query(
+        collection(db, "users"),
+        where("email", "==", userInfo.email)
+      );
+      const querySnapshot = await getDocs(q);
+      querySnapshot.forEach((doc) => {
+        // console.log(doc.data());
+        setValue("user", {
+          id: doc.id,
+          ...doc.data(),
+        });
       });
+      // const docData = await getDoc(colRef);
+      // // console.log(docData.data());
     }
     fetchUserData();
-  }, [userInfo.uid]);
+  }, [userInfo.email]);
 
   const addPostHandler = async (values) => {
     setLoading(true);
@@ -79,23 +87,23 @@ const PostAddNew = () => {
       cloneValues.status = Number(values.status);
       console.log(cloneValues);
       const colRef = collection(db, "posts");
-      // await addDoc(colRef, {
-      //   ...cloneValues,
-      //   image,
-      //   userId: userInfo.uid,
-      //   createdAt: serverTimestamp(),
-      // });
-      // toast.success("Create new post successfully");
-      // reset({
-      //   title: "",
-      //   slug: "",
-      //   status: 2,
-      //   category: {},
-      //   hot: false,
-      //   image: "",
-      // });
-      // handleResetUpload();
-      // setSelectCategory({});
+      await addDoc(colRef, {
+        ...cloneValues,
+        image,
+        createdAt: serverTimestamp(),
+      });
+      toast.success("Create new post successfully");
+      reset({
+        title: "",
+        slug: "",
+        status: 2,
+        category: {},
+        hot: false,
+        image: "",
+        user: {},
+      });
+      handleResetUpload();
+      setSelectCategory({});
     } catch (error) {
       setLoading(false);
     } finally {
