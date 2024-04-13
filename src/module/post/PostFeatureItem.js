@@ -85,7 +85,7 @@ const PostFeatureItem = ({ data }) => {
     ? new Date(data?.createdAt?.seconds * 1000)
     : new Date();
   const formatDate = new Date(date).toLocaleDateString("vi-VI");
-  console.log(formatDate);
+  // console.log(formatDate);
   return (
     <PostFeatureItemStyles>
       <PostImage url={data.image} alt="unsplash"></PostImage>

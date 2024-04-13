@@ -77,7 +77,7 @@ const CategoryManage = () => {
 
       onSnapshot(newRef, (snapshot) => {
         let results = [];
-        console.log(snapshot.size);
+        // console.log(snapshot.size);
         snapshot.forEach((doc) => {
           results.push({
             id: doc.id,

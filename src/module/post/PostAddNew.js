@@ -13,6 +13,8 @@ import ImageUpload from "components/image/ImageUpload";
 import {
   addDoc,
   collection,
+  doc,
+  getDoc,
   getDocs,
   query,
   serverTimestamp,
@@ -34,7 +36,7 @@ const PostAddNew = () => {
       title: "",
       slug: "",
       status: 2,
-      categoryId: "",
+      category: {},
       hot: false,
       image: "",
     },
@@ -54,6 +56,20 @@ const PostAddNew = () => {
   const [loading, setLoading] = useState(false);
   // const watchCategory = watch("category");
 
+  useEffect(() => {
+    if (!userInfo.uid) return;
+    async function fetchUserData() {
+      const colRef = doc(db, "users", userInfo.uid);
+      const docData = await getDoc(colRef);
+      // console.log(docData.data());
+      setValue("user", {
+        id: docData.id,
+        ...docData.data(),
+      });
+    }
+    fetchUserData();
+  }, [userInfo.uid]);
+
   const addPostHandler = async (values) => {
     setLoading(true);
     try {
@@ -63,23 +79,23 @@ const PostAddNew = () => {
       cloneValues.status = Number(values.status);
       console.log(cloneValues);
       const colRef = collection(db, "posts");
-      await addDoc(colRef, {
-        ...cloneValues,
-        image,
-        userId: userInfo.uid,
-        createdAt: serverTimestamp(),
-      });
-      toast.success("Create new post successfully");
-      reset({
-        title: "",
-        slug: "",
-        status: 2,
-        categoryId: "",
-        hot: false,
-        image: "",
-      });
-      handleResetUpload();
-      setSelectCategory({});
+      // await addDoc(colRef, {
+      //   ...cloneValues,
+      //   image,
+      //   userId: userInfo.uid,
+      //   createdAt: serverTimestamp(),
+      // });
+      // toast.success("Create new post successfully");
+      // reset({
+      //   title: "",
+      //   slug: "",
+      //   status: 2,
+      //   category: {},
+      //   hot: false,
+      //   image: "",
+      // });
+      // handleResetUpload();
+      // setSelectCategory({});
     } catch (error) {
       setLoading(false);
     } finally {
@@ -113,8 +129,15 @@ const PostAddNew = () => {
     document.title = "Monkey Blogging - Add new post";
   }, []);
 
-  const handleClickOption = (item) => {
-    setValue("categoryId", item.id);
+  const handleClickOption = async (item) => {
+    // setValue("categoryId", item.id);
+    const colRef = doc(db, "categories", item.id);
+    const docData = await getDoc(colRef);
+    // console.log(docData.data());
+    setValue("category", {
+      id: docData.id,
+      ...docData.data(),
+    });
     setSelectCategory(item);
   };
 
