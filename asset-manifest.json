@@ -1,0 +1,15 @@
+{
+  "files": {
+    "main.css": "/ducduy1102/monkey-blogging/static/css/main.1842abb4.css",
+    "main.js": "/ducduy1102/monkey-blogging/static/js/main.9f574ba5.js",
+    "static/js/787.b456b3f3.chunk.js": "/ducduy1102/monkey-blogging/static/js/787.b456b3f3.chunk.js",
+    "index.html": "/ducduy1102/monkey-blogging/index.html",
+    "main.1842abb4.css.map": "/ducduy1102/monkey-blogging/static/css/main.1842abb4.css.map",
+    "main.9f574ba5.js.map": "/ducduy1102/monkey-blogging/static/js/main.9f574ba5.js.map",
+    "787.b456b3f3.chunk.js.map": "/ducduy1102/monkey-blogging/static/js/787.b456b3f3.chunk.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.1842abb4.css",
+    "static/js/main.9f574ba5.js"
+  ]
+}
