@@ -11,7 +11,7 @@ export default function useFirebaseImage(
   setValue,
   getValues,
   imageName = null,
-  callback
+  callback = null
 ) {
   const storage = getStorage();
 

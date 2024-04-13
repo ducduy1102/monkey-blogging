@@ -34,7 +34,7 @@ const UserUpdate = () => {
   const imageUrl = getValues("avatar");
   //   console.log(/%2F(\S+)\?/gm.exec(imageUrl)); //['%2Favatar-cute-11.jpg?', 'avatar-cute-11.jpg', index: 86, input: 'https://firebasestorage.googleapis.com/v0/b/monkey…=media&..., => lấy cái (1) 'avatar-cute-11.jpg'
   const imageRegex = /%2F(\S+)\?/gm.exec(imageUrl);
-  const image_name = imageRegex?.length > 0 ? imageRegex[1] : "";
+  const imageName = imageRegex?.length > 0 ? imageRegex[1] : "";
   //   console.log(imageRegex);
 
   const {
@@ -44,7 +44,7 @@ const UserUpdate = () => {
     handleResetUpload,
     handleSelectImage,
     handleDeleteImage,
-  } = useFirebaseImage(setValue, getValues, image_name, deleteAvatar);
+  } = useFirebaseImage(setValue, getValues, imageName, deleteAvatar);
   //   } = useFirebaseImage(setValue, getValues);
 
   const handleUpdateUser = async (values) => {
