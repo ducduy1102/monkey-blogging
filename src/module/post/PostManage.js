@@ -1,11 +1,15 @@
 import { ActionDelete, ActionEdit, ActionView } from "components/action";
 import { Button } from "components/button";
 import { Dropdown } from "components/dropdown";
+import { Label, LabelStatus } from "components/label";
 // import { Pagination } from "components/pagination";
 import { Table } from "components/table";
 import { db } from "firebase-app/firebase-config";
 import {
   collection,
+  deleteDoc,
+  doc,
+  getDoc,
   getDocs,
   limit,
   onSnapshot,
@@ -15,8 +19,10 @@ import {
 import DashboardHeading from "module/dashboard/DashboardHeading";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
+import { postStatus } from "utils/constants";
 
-const POST_PER_PAGE = 1;
+const POST_PER_PAGE = 3;
 
 const PostManage = () => {
   const [postList, setPostList] = useState([]);
@@ -55,6 +61,40 @@ const PostManage = () => {
     fetchData();
   }, [filter]);
 
+  async function handleDeletePost(postId) {
+    const docRef = doc(db, "posts", postId);
+    // const singleDoc = await getDoc(docRef);
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        await deleteDoc(docRef);
+        Swal.fire({
+          title: "Deleted!",
+          text: "Your post has been deleted.",
+          icon: "success",
+        });
+      }
+    });
+  }
+  const renderPostStatus = (status) => {
+    switch (status) {
+      case postStatus.APPROVED:
+        return <LabelStatus type="success">Approved</LabelStatus>;
+      case postStatus.PENDING:
+        return <LabelStatus type="warning">Pending</LabelStatus>;
+      case postStatus.REJECTED:
+        return <LabelStatus type="danger">Rejected</LabelStatus>;
+      default:
+        break;
+    }
+  };
   return (
     <div>
       <DashboardHeading
@@ -82,6 +122,7 @@ const PostManage = () => {
             <th>Post</th>
             <th>Category</th>
             <th>Author</th>
+            <th>Status</th>
             <th>Actions</th>
           </tr>
         </thead>
@@ -120,12 +161,18 @@ const PostManage = () => {
                     <span className="text-gray-500">{post.user?.username}</span>
                   </td>
                   <td>
+                    {renderPostStatus(post.status)}
+                    {/* <LabelStatus></LabelStatus> */}
+                  </td>
+                  <td>
                     <div className="flex items-center text-gray-500 gap-x-3">
                       <ActionView
                         onClick={() => navigate(`/${post.slug}`)}
                       ></ActionView>
                       <ActionEdit></ActionEdit>
-                      <ActionDelete></ActionDelete>
+                      <ActionDelete
+                        onClick={() => handleDeletePost(post.id)}
+                      ></ActionDelete>
                     </div>
                   </td>
                 </tr>
@@ -135,8 +182,8 @@ const PostManage = () => {
       </Table>
       <div className="mt-10 text-center">
         {/* <Pagination></Pagination> */}
-        <Button kind="ghost" className="mx-auto w-[200px]">
-          Load more+
+        <Button kind="primary" className="mx-auto w-[200px]">
+          Load more
         </Button>
       </div>
     </div>
