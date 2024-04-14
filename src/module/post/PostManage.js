@@ -1,7 +1,7 @@
 import { ActionDelete, ActionEdit, ActionView } from "components/action";
 import { Button } from "components/button";
 import { Dropdown } from "components/dropdown";
-import { Label, LabelStatus } from "components/label";
+import { LabelStatus } from "components/label";
 // import { Pagination } from "components/pagination";
 import { Table } from "components/table";
 import { db } from "firebase-app/firebase-config";
@@ -9,26 +9,28 @@ import {
   collection,
   deleteDoc,
   doc,
-  getDoc,
   getDocs,
   limit,
   onSnapshot,
   query,
+  startAfter,
   where,
 } from "firebase/firestore";
+import { debounce } from "lodash";
 import DashboardHeading from "module/dashboard/DashboardHeading";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import { postStatus } from "utils/constants";
 
-const POST_PER_PAGE = 3;
+const POST_PER_PAGE = 1;
 
 const PostManage = () => {
   const [postList, setPostList] = useState([]);
   const [filter, setFilter] = useState("");
   const [lastDoc, setLastDoc] = useState();
   const navigate = useNavigate();
+  const [total, setTotal] = useState(0);
 
   useEffect(() => {
     async function fetchData() {
@@ -36,14 +38,18 @@ const PostManage = () => {
       const newRef = filter
         ? query(
             colRef,
-            where("name", ">=", filter),
-            where("name", "<=", filter + "utf8")
+            where("title", ">=", filter),
+            where("title", "<=", filter + "utf8")
           )
         : query(colRef, limit(POST_PER_PAGE));
 
       const documentSnapshots = await getDocs(newRef);
       const lastVisible =
         documentSnapshots.docs[documentSnapshots.docs.length - 1];
+
+      onSnapshot(colRef, (snapshot) => {
+        setTotal(snapshot.size);
+      });
 
       onSnapshot(newRef, (snapshot) => {
         let results = [];
@@ -95,6 +101,36 @@ const PostManage = () => {
         break;
     }
   };
+
+  const handleSearchPost = debounce((e) => {
+    setFilter(e.target.value);
+  }, 250);
+
+  const handleLoadMorePost = async () => {
+    const nextRef = query(
+      collection(db, "posts"),
+      startAfter(lastDoc || 0),
+      limit(POST_PER_PAGE)
+    );
+
+    onSnapshot(nextRef, (snapshot) => {
+      let results = [];
+      console.log(snapshot.size);
+      snapshot.forEach((doc) => {
+        results.push({
+          id: doc.id,
+          ...doc.data(),
+        });
+      });
+      // setCategoryList(results);
+      setPostList([...postList, ...results]);
+    });
+    const documentSnapshots = await getDocs(nextRef);
+    const lastVisible =
+      documentSnapshots.docs[documentSnapshots.docs.length - 1];
+    setLastDoc(lastVisible);
+  };
+
   return (
     <div>
       <DashboardHeading
@@ -112,6 +148,7 @@ const PostManage = () => {
             type="text"
             className="w-full p-4 border border-gray-300 border-solid rounded-lg"
             placeholder="Search post..."
+            onChange={handleSearchPost}
           />
         </div>
       </div>
@@ -169,7 +206,11 @@ const PostManage = () => {
                       <ActionView
                         onClick={() => navigate(`/${post.slug}`)}
                       ></ActionView>
-                      <ActionEdit></ActionEdit>
+                      <ActionEdit
+                        onClick={() =>
+                          navigate(`/manage/update-post?id=${post.id}`)
+                        }
+                      ></ActionEdit>
                       <ActionDelete
                         onClick={() => handleDeletePost(post.id)}
                       ></ActionDelete>
@@ -182,9 +223,15 @@ const PostManage = () => {
       </Table>
       <div className="mt-10 text-center">
         {/* <Pagination></Pagination> */}
-        <Button kind="primary" className="mx-auto w-[200px]">
-          Load more
-        </Button>
+        {total > postList.length && (
+          <Button
+            kind="primary"
+            className="mx-auto w-[200px]"
+            onClick={handleLoadMorePost}
+          >
+            Load more
+          </Button>
+        )}
       </div>
     </div>
   );
