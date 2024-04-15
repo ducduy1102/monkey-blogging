@@ -4,6 +4,7 @@ import { Field, FieldCheckboxes } from "components/field";
 import ImageUpload from "components/image/ImageUpload";
 import { Input } from "components/input";
 import { Label } from "components/label";
+import { Textarea } from "components/textarea";
 import { db } from "firebase-app/firebase-config";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
 import useFirebaseImage from "hooks/useFirebaseImage";
@@ -37,14 +38,8 @@ const UserUpdate = () => {
   const imageName = imageRegex?.length > 0 ? imageRegex[1] : "";
   //   console.log(imageRegex);
 
-  const {
-    image,
-    setImage,
-    progress,
-    handleResetUpload,
-    handleSelectImage,
-    handleDeleteImage,
-  } = useFirebaseImage(setValue, getValues, imageName, deleteAvatar);
+  const { image, setImage, progress, handleSelectImage, handleDeleteImage } =
+    useFirebaseImage(setValue, getValues, imageName, deleteAvatar);
   //   } = useFirebaseImage(setValue, getValues);
 
   const handleUpdateUser = async (values) => {
@@ -81,7 +76,7 @@ const UserUpdate = () => {
       const colRef = doc(db, "users", userId);
       const docData = await getDoc(colRef);
       reset(docData?.data());
-      console.log(docData.data());
+      // console.log(docData.data());
     }
     fetchData();
   }, [userId, reset]);
@@ -200,6 +195,12 @@ const UserUpdate = () => {
                 User
               </Radio>
             </FieldCheckboxes>
+          </Field>
+        </div>
+        <div className="form-layout">
+          <Field>
+            <Label>Description</Label>
+            <Textarea name="description" control={control}></Textarea>
           </Field>
         </div>
         <Button

@@ -8,16 +8,10 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import styled from "styled-components";
 import PageNotFound from "./PageNotFound";
-import {
-  collection,
-  doc,
-  getDoc,
-  onSnapshot,
-  query,
-  where,
-} from "firebase/firestore";
+import { collection, onSnapshot, query, where } from "firebase/firestore";
 import { db } from "firebase-app/firebase-config";
 import parse from "html-react-parser";
+import AuthorBox from "components/author/AuthorBox";
 
 const PostDetailsPageStyles = styled.div`
   padding-bottom: 100px;
@@ -125,6 +119,7 @@ const PostDetailsPage = () => {
   if (!slug || !postInfo.title) return <PageNotFound></PageNotFound>;
   // console.log(postInfo.content);
   const { user } = postInfo;
+  // console.log(user);
   return (
     <PostDetailsPageStyles>
       <Layout>
@@ -144,16 +139,7 @@ const PostDetailsPage = () => {
           </div>
           <div className="post-content">
             <div className="entry-content">{parse(postInfo.content || "")}</div>
-
-            <div className="author">
-              <div className="author-image">
-                <img src={user?.avatar} alt="" />
-              </div>
-              <div className="author-content">
-                <h3 className="author-name">{user?.fullname}</h3>
-                <p className="author-desc">{user?.description}</p>
-              </div>
-            </div>
+            <AuthorBox userId={user?.id}></AuthorBox>
           </div>
           <div className="post-related">
             <Heading>Bài viết liên quan</Heading>
