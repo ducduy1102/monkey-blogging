@@ -4,6 +4,7 @@ import { Dropdown } from "components/dropdown";
 import { LabelStatus } from "components/label";
 // import { Pagination } from "components/pagination";
 import { Table } from "components/table";
+import { useAuth } from "contexts/auth-context";
 import { db } from "firebase-app/firebase-config";
 import {
   collection,
@@ -21,7 +22,7 @@ import DashboardHeading from "module/dashboard/DashboardHeading";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
-import { postStatus } from "utils/constants";
+import { postStatus, userRole } from "utils/constants";
 
 const POST_PER_PAGE = 1;
 
@@ -131,6 +132,8 @@ const PostManage = () => {
     setLastDoc(lastVisible);
   };
 
+  // const { userInfo } = useAuth();
+  // if (userInfo.role !== userRole.ADMIN) return null;
   return (
     <div>
       <DashboardHeading
