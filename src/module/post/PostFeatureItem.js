@@ -65,7 +65,6 @@ const PostFeatureItem = ({ data }) => {
   return (
     <PostFeatureItemStyles>
       <PostImage url={data.image} alt="unsplash"></PostImage>
-
       <div className="post-overlay"></div>
       <div className="post-content">
         <div className="post-top">
@@ -73,7 +72,7 @@ const PostFeatureItem = ({ data }) => {
             <PostCategory to={category.slug}>{category.name}</PostCategory>
           )}
           <PostMeta
-            to={slugify(user?.fullname || "", { lower: true })}
+            to={slugify(user?.username || "", { lower: true })}
             authorName={user?.fullname}
             date={formatDate}
           ></PostMeta>

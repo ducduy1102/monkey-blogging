@@ -17,6 +17,7 @@ import UserManage from "module/user/UserManage";
 import CategoryUpdate from "module/category/CategoryUpdate";
 import UserUpdate from "module/user/UserUpdate";
 import PostUpdate from "module/post/PostUpdate";
+import CategoryPage from "pages/CategoryPage";
 
 function App() {
   // const {userInfo} = useAuth();
@@ -28,6 +29,10 @@ function App() {
           <Route path="/sign-up" element={<SignUpPage></SignUpPage>}></Route>
           <Route path="/sign-in" element={<SignInPage></SignInPage>}></Route>
           <Route path="*" element={<PageNotFound></PageNotFound>}></Route>
+          <Route
+            path="/category/:slug"
+            element={<CategoryPage></CategoryPage>}
+          ></Route>
           <Route
             path="/:slug"
             element={<PostDetailsPage></PostDetailsPage>}

@@ -89,8 +89,6 @@ const PostAddNew = () => {
       const colRef = collection(db, "posts");
       await addDoc(colRef, {
         ...cloneValues,
-        categoryId: cloneValues.category.id,
-        userId: cloneValues.user.id,
         image,
         createdAt: serverTimestamp(),
       });
@@ -223,7 +221,6 @@ const PostAddNew = () => {
                 name="status"
                 control={control}
                 checked={Number(watchStatus) === postStatus.APPROVED}
-                // onClick={() => setValue("status", "1")}
                 value={postStatus.APPROVED}
               >
                 Approved
@@ -232,7 +229,6 @@ const PostAddNew = () => {
                 name="status"
                 control={control}
                 checked={Number(watchStatus) === postStatus.PENDING}
-                // onClick={() => setValue("status", "2")}
                 value={postStatus.PENDING}
               >
                 Pending
@@ -241,7 +237,6 @@ const PostAddNew = () => {
                 name="status"
                 control={control}
                 checked={Number(watchStatus) === postStatus.REJECTED}
-                // onClick={() => setValue("status", "3")}
                 value={postStatus.REJECTED}
               >
                 Reject

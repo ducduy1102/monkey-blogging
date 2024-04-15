@@ -1,8 +1,6 @@
-import Heading from "components/layout/Heading";
 import Layout from "components/layout/Layout";
 import PostCategory from "module/post/PostCategory";
 import PostImage from "module/post/PostImage";
-import PostItem from "module/post/PostItem";
 import PostMeta from "module/post/PostMeta";
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
@@ -13,6 +11,7 @@ import { db } from "firebase-app/firebase-config";
 import parse from "html-react-parser";
 import AuthorBox from "components/author/AuthorBox";
 import PostRelated from "module/post/PostRelated";
+import slugify from "slugify";
 
 const PostDetailsPageStyles = styled.div`
   padding-bottom: 100px;
@@ -117,11 +116,18 @@ const PostDetailsPage = () => {
     }
     fetchData();
   }, [slug]);
+  useEffect(() => {
+    document.body.scrollIntoView({ behavior: "smooth", block: "start" });
+  }, [slug]);
   if (!slug) return <PageNotFound></PageNotFound>;
   if (!postInfo.title) return null;
   // console.log(postInfo.content);
   const { user } = postInfo;
   // console.log(user);
+  const date = user?.createdAt?.seconds
+    ? new Date(user?.createdAt?.seconds * 1000)
+    : new Date();
+  const formatDate = new Date(date).toLocaleDateString("vi-VI");
   return (
     <PostDetailsPageStyles>
       <Layout>
@@ -132,18 +138,22 @@ const PostDetailsPage = () => {
               className="post-feature"
             ></PostImage>
             <div className="post-info">
-              <PostCategory className="mb-6">
+              <PostCategory className="mb-6" to={postInfo.category?.slug}>
                 {postInfo.category?.name}
               </PostCategory>
               <h1 className="post-heading">{postInfo.title}</h1>
-              <PostMeta></PostMeta>
+              <PostMeta
+                to={slugify(user?.username || "", { lower: true })}
+                authorName={user?.fullname}
+                date={formatDate}
+              ></PostMeta>
             </div>
           </div>
           <div className="post-content">
             <div className="entry-content">{parse(postInfo.content || "")}</div>
             <AuthorBox userId={user?.id}></AuthorBox>
           </div>
-          <PostRelated categoryId={postInfo?.categoryId}></PostRelated>
+          <PostRelated categoryId={postInfo?.category?.id}></PostRelated>
         </div>
       </Layout>
     </PostDetailsPageStyles>
