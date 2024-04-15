@@ -5,7 +5,9 @@ import PostImage from "module/post/PostImage";
 import PostItem from "module/post/PostItem";
 import PostMeta from "module/post/PostMeta";
 import React from "react";
+import { useParams, useSearchParams } from "react-router-dom";
 import styled from "styled-components";
+import PageNotFound from "./PageNotFound";
 const PostDetailsPageStyles = styled.div`
   padding-bottom: 100px;
   .post {
@@ -94,6 +96,8 @@ const PostDetailsPageStyles = styled.div`
 `;
 
 const PostDetailsPage = () => {
+  const { slug } = useParams();
+  if (!slug) return <PageNotFound></PageNotFound>;
   return (
     <PostDetailsPageStyles>
       <Layout>
