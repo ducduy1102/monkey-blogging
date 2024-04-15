@@ -62,9 +62,9 @@ const HomeNewest = () => {
           <PostNewestLarge data={first}></PostNewestLarge>
           <div className="sidebar">
             {other.length > 0 &&
-              other.map((item) => {
-                <PostNewestItem key={v4()} data={item}></PostNewestItem>;
-              })}
+              other.map((item) => (
+                <PostNewestItem key={v4()} data={item}></PostNewestItem>
+              ))}
           </div>
         </div>
         <div className="grid-layout grid-layout--primary">

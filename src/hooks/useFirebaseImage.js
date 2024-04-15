@@ -83,6 +83,7 @@ export default function useFirebaseImage(
       .catch((error) => {
         // Uh-oh, an error occurred!
         console.log("Can't remove image");
+        setImage("");
       });
   };
   const handleResetUpload = () => {

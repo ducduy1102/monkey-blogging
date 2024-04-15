@@ -55,10 +55,12 @@ const PostNewestItem = ({ data }) => {
   const formatDate = new Date(date).toLocaleDateString("vi-VI");
   return (
     <PostNewestItemStyles>
-      <PostImage url={data?.image} alt="" to="/"></PostImage>
+      <PostImage url={data?.image} alt="" to={data.slug}></PostImage>
       <div className="post-content">
-        <PostCategory type="secondary">{data?.category?.name}</PostCategory>
-        <PostTitle>{data?.title}</PostTitle>
+        <PostCategory type="secondary" to={data.category?.slug}>
+          {data?.category?.name}
+        </PostCategory>
+        <PostTitle to={data.slug}>{data?.title}</PostTitle>
         <PostMeta
           to={slugify(data.user?.username || "", { lower: true })}
           authorName={data.user?.fullname}
