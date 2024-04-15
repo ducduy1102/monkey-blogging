@@ -26,16 +26,26 @@ import ReactQuill, { Quill } from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import { toast } from "react-toastify";
 import ImageUploader from "quill-image-uploader";
+import axios from "axios";
+import { imgbbAPI } from "config/apiConfig";
 Quill.register("modules/imageUploader", ImageUploader);
 
 const PostUpdate = () => {
-  const { control, watch, setValue, getValues, handleSubmit, reset } = useForm({
+  const {
+    control,
+    watch,
+    setValue,
+    getValues,
+    handleSubmit,
+    reset,
+    formState: { isSubmitting },
+  } = useForm({
     mode: "onChange",
   });
 
   const [params] = useSearchParams();
   const postId = params.get("id");
-  const [loading, setLoading] = useState(false);
+  // const [loading, setLoading] = useState(false);
   const [content, setContent] = useState("");
   const imageUrl = getValues("image");
   const imageName = getValues("image_name");
@@ -138,14 +148,18 @@ const PostUpdate = () => {
         ["link", "image"],
       ],
       imageUploader: {
-        upload: (file) => {
-          return new Promise((resolve, reject) => {
-            resolve(
-              "https://api.imgbb.com/1/upload?key=8f8623e967a053202243e63b709f3664"
-            );
-            // setTimeout(() => {
-            // }, 3500);
+        upload: async (file) => {
+          const bodyFormData = new FormData();
+          bodyFormData.append("image", file);
+          const response = await axios({
+            method: "post",
+            url: imgbbAPI,
+            data: bodyFormData,
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
           });
+          return response.data.data.url;
         },
       },
     }),
@@ -270,8 +284,8 @@ const PostUpdate = () => {
         <Button
           type="submit"
           className="mx-auto w-p[250px]"
-          isLoading={loading}
-          disabled={loading}
+          isLoading={isSubmitting}
+          disabled={isSubmitting}
         >
           Update post
         </Button>
