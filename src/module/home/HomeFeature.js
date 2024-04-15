@@ -13,7 +13,7 @@ import styled from "styled-components";
 const HomeFeatureStyles = styled.div``;
 
 const HomeFeature = () => {
-  const [posts, setPost] = useState([]);
+  const [posts, setPosts] = useState([]);
   useEffect(() => {
     const colRef = collection(db, "posts");
     const queries = query(
@@ -32,7 +32,7 @@ const HomeFeature = () => {
           ...doc.data(),
         });
       });
-      setPost(results);
+      setPosts(results);
     });
   }, []);
   if (posts.length <= 0) return null;

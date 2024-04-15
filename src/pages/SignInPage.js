@@ -96,7 +96,7 @@ const SignInPage = () => {
           isLoading={isSubmitting}
           disabled={isSubmitting}
         >
-          Sign Up
+          Login
         </Button>
       </form>
     </AuthenticationPage>
