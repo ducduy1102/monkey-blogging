@@ -38,14 +38,13 @@ const PostUpdate = () => {
     getValues,
     handleSubmit,
     reset,
-    formState: { isSubmitting },
+    formState: { isValid, isSubmitting },
   } = useForm({
     mode: "onChange",
   });
 
   const [params] = useSearchParams();
   const postId = params.get("id");
-  // const [loading, setLoading] = useState(false);
   const [content, setContent] = useState("");
   const imageUrl = getValues("image");
   const imageName = getValues("image_name");
@@ -114,7 +113,6 @@ const PostUpdate = () => {
   }, []);
 
   const handleClickOption = async (item) => {
-    // setValue("categoryId", item.id);
     const colRef = doc(db, "categories", item.id);
     const docData = await getDoc(colRef);
     // console.log(docData.data());
@@ -131,8 +129,10 @@ const PostUpdate = () => {
 
   const updatePostHandler = async (values) => {
     // console.log(values);
+    if (!isValid) return;
     const docRef = doc(db, "posts", postId);
     await updateDoc(docRef, {
+      ...values,
       content,
     });
     toast.success("Update post successfully!");
@@ -255,7 +255,6 @@ const PostUpdate = () => {
                 name="status"
                 control={control}
                 checked={Number(watchStatus) === postStatus.APPROVED}
-                // onClick={() => setValue("status", "1")}
                 value={postStatus.APPROVED}
               >
                 Approved
@@ -264,7 +263,6 @@ const PostUpdate = () => {
                 name="status"
                 control={control}
                 checked={Number(watchStatus) === postStatus.PENDING}
-                // onClick={() => setValue("status", "2")}
                 value={postStatus.PENDING}
               >
                 Pending
@@ -273,7 +271,6 @@ const PostUpdate = () => {
                 name="status"
                 control={control}
                 checked={Number(watchStatus) === postStatus.REJECTED}
-                // onClick={() => setValue("status", "3")}
                 value={postStatus.REJECTED}
               >
                 Reject
