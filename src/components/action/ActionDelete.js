@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 
 const ActionDelete = ({ onClick = () => {} }) => {
   return (
@@ -22,6 +23,10 @@ const ActionDelete = ({ onClick = () => {} }) => {
       </svg>
     </span>
   );
+};
+
+ActionDelete.propTypes = {
+  onClick: PropTypes.func,
 };
 
 export default ActionDelete;

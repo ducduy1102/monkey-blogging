@@ -3,6 +3,8 @@ import { useAuth } from "contexts/auth-context";
 import React from "react";
 import { NavLink } from "react-router-dom";
 import styled from "styled-components";
+import PropTypes from "prop-types";
+
 const menuLinks = [
   {
     url: "/",
@@ -156,6 +158,10 @@ const Header = () => {
       </div>
     </HeaderStyles>
   );
+};
+
+Header.propTypes = {
+  userInfo: PropTypes.object,
 };
 
 export default Header;

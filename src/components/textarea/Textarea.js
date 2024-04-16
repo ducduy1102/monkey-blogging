@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import { useController } from "react-hook-form";
+import PropTypes from "prop-types";
 
 const TexareaStyles = styled.div`
   position: relative;
@@ -51,6 +52,13 @@ const Textarea = ({
       <textarea id={name} type={type} {...field} {...props} />
     </TexareaStyles>
   );
+};
+
+Textarea.propTypes = {
+  name: PropTypes.string,
+  type: PropTypes.string,
+  children: PropTypes.node,
+  control: PropTypes.object.isRequired,
 };
 
 export default Textarea;

@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from "prop-types";
 
 const ActionView = ({ onClick = () => {} }) => {
   return (
@@ -27,6 +28,10 @@ const ActionView = ({ onClick = () => {} }) => {
       </svg>
     </span>
   );
+};
+
+ActionView.propTypes = {
+  onClick: PropTypes.func,
 };
 
 export default ActionView;
