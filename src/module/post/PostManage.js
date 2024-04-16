@@ -22,7 +22,7 @@ import DashboardHeading from "module/dashboard/DashboardHeading";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
-import { postStatus, userRole } from "utils/constants";
+import { postStatus } from "utils/constants";
 
 const POST_PER_PAGE = 10;
 
