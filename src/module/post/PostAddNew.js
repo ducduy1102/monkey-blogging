@@ -6,9 +6,8 @@ import { Input } from "components/input";
 import { Label } from "components/label";
 import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import styled from "styled-components";
 import slugify from "slugify";
-import { postStatus } from "utils/constants";
+import { postStatus, userRole } from "utils/constants";
 import ImageUpload from "components/image/ImageUpload";
 import {
   addDoc,
@@ -26,22 +25,31 @@ import Toggle from "components/toggle/Toggle";
 import { useAuth } from "contexts/auth-context";
 import { toast } from "react-toastify";
 import DashboardHeading from "module/dashboard/DashboardHeading";
+import Swal from "sweetalert2";
+// import * as yup from "yup";
+// import { yupResolver } from "@hookform/resolvers/yup";
+
+// const schema = yup.object({
+//   title: yup.string().required("Please enter your title"),
+// });
 
 const PostAddNew = () => {
   const { userInfo } = useAuth();
   // console.log(userInfo);
-  const { control, watch, setValue, handleSubmit, getValues, reset } = useForm({
-    mode: "onChange",
-    defaultValues: {
-      title: "",
-      slug: "",
-      status: 2,
-      category: {},
-      hot: false,
-      image: "",
-      user: {},
-    },
-  });
+  const { control, watch, setValue, handleSubmit, getValues, reset, errors } =
+    useForm({
+      mode: "onChange",
+      defaultValues: {
+        title: "",
+        slug: "",
+        status: 2,
+        category: {},
+        hot: false,
+        image: "",
+        user: {},
+      },
+      // resolver: yupResolver(schema),
+    });
   const watchStatus = watch("status");
   const watchHot = watch("hot");
   const {
@@ -79,6 +87,10 @@ const PostAddNew = () => {
   }, [userInfo.email]);
 
   const addPostHandler = async (values) => {
+    // if (userInfo?.role !== userRole.ADMIN) {
+    //   Swal.fire("Failed", "You have no right to do this action", "warning");
+    //   return;
+    // }
     setLoading(true);
     try {
       const cloneValues = { ...values };
@@ -148,6 +160,14 @@ const PostAddNew = () => {
     });
     setSelectCategory(item);
   };
+
+  // console.log(Object.values(errors));
+  // useEffect(() => {
+  //   const arrErrors = Object.values(errors);
+  //   if (arrErrors.length > 0) {
+  //     toast.error(arrErrors[0]?.message, { pauseOnHover: false, delay: 0 });
+  //   }
+  // }, [errors]);
 
   return (
     <>

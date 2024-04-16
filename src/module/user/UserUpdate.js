@@ -5,6 +5,7 @@ import ImageUpload from "components/image/ImageUpload";
 import { Input } from "components/input";
 import { Label } from "components/label";
 import { Textarea } from "components/textarea";
+import { useAuth } from "contexts/auth-context";
 import { db } from "firebase-app/firebase-config";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
 import useFirebaseImage from "hooks/useFirebaseImage";
@@ -13,6 +14,7 @@ import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useSearchParams } from "react-router-dom";
 import { toast } from "react-toastify";
+import Swal from "sweetalert2";
 import { userRole, userStatus } from "utils/constants";
 
 const UserUpdate = () => {
@@ -41,10 +43,15 @@ const UserUpdate = () => {
   const { image, setImage, progress, handleSelectImage, handleDeleteImage } =
     useFirebaseImage(setValue, getValues, imageName, deleteAvatar);
   //   } = useFirebaseImage(setValue, getValues);
-
+  const { userInfo } = useAuth();
   const handleUpdateUser = async (values) => {
     // them yup vao
     if (!isValid) return;
+    console.log(userInfo.role);
+    if (userInfo?.role !== userRole.ADMIN) {
+      Swal.fire("Failed", "You have no right to do this action", "warning");
+      return;
+    }
     try {
       // console.log(values);
       const colRef = doc(db, "users", userId);

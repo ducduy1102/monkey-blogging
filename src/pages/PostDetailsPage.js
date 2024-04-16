@@ -109,7 +109,7 @@ const PostDetailsPage = () => {
       const colRef = query(collection(db, "posts"), where("slug", "==", slug));
       onSnapshot(colRef, (snapshot) => {
         snapshot.forEach((doc) => {
-          console.log(doc.data());
+          // console.log(doc.data());
           doc.data() && setPostInfo(doc.data());
         });
       });

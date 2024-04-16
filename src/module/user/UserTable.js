@@ -1,6 +1,7 @@
 import { ActionDelete, ActionEdit } from "components/action";
 import { LabelStatus } from "components/label";
 import { Table } from "components/table";
+import { useAuth } from "contexts/auth-context";
 import { db } from "firebase-app/firebase-config";
 import { collection, deleteDoc, doc, onSnapshot } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
@@ -49,7 +50,12 @@ const UserTable = () => {
         break;
     }
   };
+  const { userInfo } = useAuth();
   const handleDeleteUser = async (user) => {
+    if (userInfo?.role !== userRole.ADMIN) {
+      Swal.fire("Failed", "You have no right to do this action", "warning");
+      return;
+    }
     const colRef = doc(db, "users", user.id);
     Swal.fire({
       title: "Are you sure?",
@@ -110,7 +116,7 @@ const UserTable = () => {
       </tr>
     );
   };
-  console.log(userList);
+  // console.log(userList);
   return (
     <div>
       <Table>

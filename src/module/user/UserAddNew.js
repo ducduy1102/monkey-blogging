@@ -19,6 +19,8 @@ import {
 } from "firebase/firestore";
 import slugify from "slugify";
 import { toast } from "react-toastify";
+import { useAuth } from "contexts/auth-context";
+import Swal from "sweetalert2";
 
 const UserAddNew = () => {
   const {
@@ -50,9 +52,15 @@ const UserAddNew = () => {
     handleDeleteImage,
   } = useFirebaseImage(setValue, getValues);
 
+  const { userInfo } = useAuth();
+
   const handleCreateUser = async (values) => {
     if (!isValid) return;
-    console.log(values);
+    if (userInfo?.role !== userRole.ADMIN) {
+      Swal.fire("Failed", "You have no right to do this action", "warning");
+      return;
+    }
+    // console.log(values);
     try {
       await createUserWithEmailAndPassword(auth, values.email, values.password);
       await addDoc(collection(db, "users"), {

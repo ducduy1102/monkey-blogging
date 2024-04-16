@@ -9,10 +9,12 @@ import DashboardHeading from "module/dashboard/DashboardHeading";
 import React, { useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { useSearchParams } from "react-router-dom";
-import { categoryStatus } from "utils/constants";
+import { categoryStatus, userRole } from "utils/constants";
 import slugify from "slugify";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "contexts/auth-context";
+import Swal from "sweetalert2";
 
 const CategoryUpdate = () => {
   const {
@@ -40,11 +42,14 @@ const CategoryUpdate = () => {
     fetchData();
   }, [categoryId, reset]);
 
-  if (!categoryId) return null;
-
   const watchStatus = watch("status");
+  const { userInfo } = useAuth();
   const handleUpdateCategory = async (values) => {
     // console.log(values);
+    if (userInfo?.role !== userRole.ADMIN) {
+      Swal.fire("Failed", "You have no right to do this action", "warning");
+      return;
+    }
     const colRef = doc(db, "categories", categoryId);
     await updateDoc(colRef, {
       name: values.name,
@@ -54,6 +59,7 @@ const CategoryUpdate = () => {
     toast.success("Update category successfully");
     navigate("/manage/category");
   };
+  if (!categoryId) return null;
 
   return (
     <div>
