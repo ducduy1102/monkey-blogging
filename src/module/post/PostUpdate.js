@@ -78,7 +78,7 @@ const PostUpdate = () => {
       if (!postId) return;
       const docRef = doc(db, "posts", postId);
       const docSnapshot = await getDoc(docRef);
-      console.log(docSnapshot.data());
+      // console.log(docSnapshot.data());
 
       if (docSnapshot.data()) {
         reset(docSnapshot.data());

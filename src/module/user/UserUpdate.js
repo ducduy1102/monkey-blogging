@@ -42,19 +42,17 @@ const UserUpdate = () => {
 
   const { image, setImage, progress, handleSelectImage, handleDeleteImage } =
     useFirebaseImage(setValue, getValues, imageName, deleteAvatar);
-  //   } = useFirebaseImage(setValue, getValues);
   const { userInfo } = useAuth();
   const handleUpdateUser = async (values) => {
-    // them yup vao
     if (!isValid) return;
-    console.log(userInfo.role);
     if (userInfo?.role !== userRole.ADMIN) {
       Swal.fire("Failed", "You have no right to do this action", "warning");
       return;
     }
     try {
-      // console.log(values);
       const colRef = doc(db, "users", userId);
+      values.role = Number(values.role);
+      values.status = Number(values.status);
       await updateDoc(colRef, {
         ...values,
         avatar: image,
@@ -82,7 +80,7 @@ const UserUpdate = () => {
       if (!userId) return;
       const colRef = doc(db, "users", userId);
       const docData = await getDoc(colRef);
-      reset(docData?.data());
+      reset(docData && docData.data());
       // console.log(docData.data());
     }
     fetchData();

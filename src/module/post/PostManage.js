@@ -177,7 +177,7 @@ const PostManage = () => {
               return (
                 <tr key={post.id}>
                   <td title={post.id}>{post.id?.slice(0, 5) + "..."}</td>
-                  <td>
+                  <td className="!pr-[100px]">
                     <div className="flex items-center gap-x-3">
                       <img
                         src={post.image}
@@ -185,8 +185,8 @@ const PostManage = () => {
                         className="w-[66px] h-[55px] rounded object-cover"
                       />
                       <div className="flex-1">
-                        <h3 className="font-semibold max-w-[300px] whitespace-pre-wrap">
-                          {post.title}
+                        <h3 className="font-semibold" title={post?.title}>
+                          {post.title.slice(0, 14) + "..."}
                         </h3>
                         <time className="text-sm text-gray-500">
                           Date: {formatDate}
@@ -200,13 +200,13 @@ const PostManage = () => {
                   <td>
                     <span className="text-gray-500">{post.user?.username}</span>
                   </td>
-                  <td>
-                    {renderPostStatus(post.status)}
-                    {/* <LabelStatus></LabelStatus> */}
-                  </td>
+                  <td>{renderPostStatus(post.status)}</td>
                   <td>
                     <div className="flex items-center text-gray-500 gap-x-3">
                       <ActionView
+                        status={
+                          post?.status === postStatus.APPROVED ? true : false
+                        }
                         onClick={() => navigate(`/${post.slug}`)}
                       ></ActionView>
                       <ActionEdit

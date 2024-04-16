@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import PostItem from "./PostItem";
 import { collection, onSnapshot, query, where } from "firebase/firestore";
 import { db } from "firebase-app/firebase-config";
+import { postStatus } from "utils/constants";
 
 const PostRelated = ({ categoryId = "" }) => {
   const [posts, setPosts] = useState([]);
@@ -31,9 +32,12 @@ const PostRelated = ({ categoryId = "" }) => {
     <div className="post-related">
       <Heading>Bài viết liên quan</Heading>
       <div className="grid-layout grid-layout--primary">
-        {posts.map((item) => (
-          <PostItem key={item.id} data={item}></PostItem>
-        ))}
+        {posts.map(
+          (item) =>
+            item.status === postStatus.APPROVED && (
+              <PostItem key={item.id} data={item}></PostItem>
+            )
+        )}
       </div>
     </div>
   );

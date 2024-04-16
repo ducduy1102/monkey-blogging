@@ -170,6 +170,11 @@ const CategoryManage = () => {
                   <div className="flex items-center gap-x-3">
                     <ActionView
                       onClick={() => navigate(`/category/${category?.slug}`)}
+                      status={
+                        category?.status === categoryStatus.APPROVED
+                          ? true
+                          : false
+                      }
                     ></ActionView>
                     <ActionEdit
                       onClick={() =>

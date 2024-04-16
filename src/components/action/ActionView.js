@@ -1,12 +1,16 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-const ActionView = ({ onClick = () => {} }) => {
+const ActionView = ({ onClick = () => {}, status = true }) => {
+  const getClassNames = () => {
+    if (status === true) {
+      return "flex items-center justify-center w-10 h-10 border border-gray-200 rounded cursor-pointer opacity-100";
+    } else {
+      return "flex items-center justify-center w-10 h-10 border border-gray-200 rounded pointer-events-none opacity-50";
+    }
+  };
   return (
-    <span
-      className="flex items-center justify-center w-10 h-10 border border-gray-200 rounded cursor-pointer"
-      onClick={onClick}
-    >
+    <span className={getClassNames()} onClick={onClick}>
       <svg
         xmlns="http://www.w3.org/2000/svg"
         className="w-5 h-5"
@@ -32,6 +36,7 @@ const ActionView = ({ onClick = () => {} }) => {
 
 ActionView.propTypes = {
   onClick: PropTypes.func,
+  status: PropTypes.bool,
 };
 
 export default ActionView;
